@@ -3,6 +3,8 @@ package com.stellive.fansite.client;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stellive.fansite.domain.Video;
+import com.stellive.fansite.domain.Videos;
 import com.stellive.fansite.utils.ApiUtils;
 import com.stellive.fansite.utils.YoutubeApiConst;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
@@ -48,7 +51,13 @@ public class YoutubeApiClient {
 
         String result = restTemplate.getForObject(uri, String.class);
         log.info("getChannelVideos={}", result);
-//        objectMapper.readValue(result, );
+        try {
+            List<Video> videos = objectMapper.readValue(result, Videos.class).getVideos();
+            log.info("videos={}", videos);
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 }
