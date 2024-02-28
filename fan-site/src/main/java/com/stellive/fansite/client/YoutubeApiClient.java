@@ -1,30 +1,23 @@
 package com.stellive.fansite.client;
 
-import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stellive.fansite.domain.Video;
-import com.stellive.fansite.domain.Videos;
+import com.stellive.fansite.domain.VideoList;
 import com.stellive.fansite.utils.ApiUtils;
-import com.stellive.fansite.utils.YoutubeApiConst;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
@@ -52,7 +45,7 @@ public class YoutubeApiClient {
         String result = restTemplate.getForObject(uri, String.class);
         log.info("getChannelVideos={}", result);
         try {
-            List<Video> videos = objectMapper.readValue(result, Videos.class).getVideos();
+            List<Video> videos = objectMapper.readValue(result, VideoList.class).getVideos();
             log.info("videos={}", videos);
 
         } catch (JsonProcessingException e) {
@@ -60,4 +53,7 @@ public class YoutubeApiClient {
         }
         return null;
     }
+
+
 }
+

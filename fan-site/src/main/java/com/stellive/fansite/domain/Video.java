@@ -1,10 +1,7 @@
 package com.stellive.fansite.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.Map;
 
 @Getter
 @Builder
+@ToString
 @EqualsAndHashCode
 public class Video {
 
@@ -21,6 +19,18 @@ public class Video {
     private String linkUrl;
     private String title;
     private Instant publishTime;
+
+    public Video() {
+    }
+
+    public Video(String videoId, Channel channel, String thumbnailUrl, String linkUrl, String title, Instant publishTime) {
+        this.videoId = videoId;
+        this.channel = channel;
+        this.thumbnailUrl = thumbnailUrl;
+        this.linkUrl = linkUrl;
+        this.title = title;
+        this.publishTime = publishTime;
+    }
 
     @JsonProperty("id")
     public void unpackId(Map<String, Object> id) {
@@ -32,10 +42,10 @@ public class Video {
     public void unpackSnippet(Map<String, Object> snippet) {
         this.title = (String) snippet.get("title");
 
-        Map<String, Object> thumbnails = (Map<String, Object>) snippet.get("thumbnail");
+        Map<String, Object> thumbnails = (Map<String, Object>) snippet.get("thumbnails");
         Map<String, Object> high = (Map<String, Object>) thumbnails.get("high");
         this.thumbnailUrl = (String) high.get("url");
 
-        this.publishTime = (Instant) snippet.get("publishTime");
+        this.publishTime = Instant.parse((String) snippet.get("publishTime"));
     }
 }
