@@ -1,19 +1,24 @@
 package com.stellive.fansite.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 
+@Entity
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
 public class Video {
 
-    private String videoId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
+
+    @ManyToOne
     private Channel channel;
     private String thumbnailUrl;
     private String linkUrl;
@@ -23,8 +28,8 @@ public class Video {
     public Video() {
     }
 
-    public Video(String videoId, Channel channel, String thumbnailUrl, String linkUrl, String title, Instant publishTime) {
-        this.videoId = videoId;
+    public Video(String id, Channel channel, String thumbnailUrl, String linkUrl, String title, Instant publishTime) {
+        this.id = id;
         this.channel = channel;
         this.thumbnailUrl = thumbnailUrl;
         this.linkUrl = linkUrl;
@@ -34,7 +39,7 @@ public class Video {
 
     @JsonProperty("id")
     public void unpackId(Map<String, Object> id) {
-        this.videoId = (String) id.get(videoId);
+        this.id = (String) id.get(this.id);
     }
 
     @SuppressWarnings("unchecked")

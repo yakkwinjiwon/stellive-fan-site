@@ -1,13 +1,21 @@
 package com.stellive.fansite.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
+@Entity
 @Getter
-@Setter
 @Builder
+@ToString
+@EqualsAndHashCode
 public class Channel {
 
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
 }
