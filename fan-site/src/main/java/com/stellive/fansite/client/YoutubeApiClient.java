@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +30,32 @@ public class YoutubeApiClient {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-
     private final ApiUtils apiUtils;
 
-    public ResponseEntity<String> getChannelVideos(String channelId, Integer maxResults) {
+    public List<Video> getChannelVideos(String channelId, Integer maxResults) {
 
-        URI uri = UriComponentsBuilder.fromHttpUrl(URL_SEARCH)
+        URI uri = getChannelVideosUri(channelId, maxResults);
+
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+            if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
+                String result = response.getBody();
+                List<Video> videos = objectMapper.readValue(result, VideoList.class).getVideos();
+                log.info("videos={}", videos);
+                return videos;
+            } else {
+                log.error("YouTube API responded with status code: {}", response.getStatusCode());
+                return Collections.emptyList();
+            }
+        } catch (RestClientException e) {
+            throw new RestTemplateApiException("API call error", e);
+        } catch (JsonProcessingException e) {
+            throw new JsonParsingException("JSON parsing error", e);
+        }
+    }
+
+    private URI getChannelVideosUri(String channelId, Integer maxResults) {
+        return UriComponentsBuilder.fromHttpUrl(URL_SEARCH)
                 .queryParam(PARAM_SEARCH_CHANNEL_ID, channelId)
                 .queryParam(PARAM_SEARCH_MAX_RESULTS, maxResults)
                 .queryParam(PARAM_SEARCH_ORDER, ORDER_DATE)
@@ -41,17 +63,6 @@ public class YoutubeApiClient {
                 .queryParam(PARAM_SEARCH_PART, PART_SNIPPET)
                 .queryParam(PARAM_SEARCH_KEY, apiUtils.getYoutubeApiKey())
                 .build().toUri();
-
-        String result = restTemplate.getForObject(uri, String.class);
-        log.info("getChannelVideos={}", result);
-        try {
-            List<Video> videos = objectMapper.readValue(result, VideoList.class).getVideos();
-            log.info("videos={}", videos);
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
     }
 
 
