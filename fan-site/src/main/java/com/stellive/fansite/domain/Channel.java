@@ -24,4 +24,6 @@ public class Channel {
     private String handle;
     private String thumbnailUrl;
 
+    @OneToMany(mappedBy = "channel")
+    private List<Video> videos;
 }
