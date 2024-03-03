@@ -1,4 +1,4 @@
-package com.stellive.fansite.client;
+package com.stellive.fansite.exceptions;
 
 public class JsonParsingException extends RuntimeException{
 

@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
@@ -23,7 +22,7 @@ public class YoutubeApiService {
 
     public String test(){
         apiClient.getChannel(CHANNEL_ID_MASHIRO);
-        apiClient.getChannelVideos(CHANNEL_ID_OFFICIAL, 2);
+        apiClient.getVideos(CHANNEL_ID_OFFICIAL, 2);
         return "ok";
     }
     public Channel updateChannel(String channelId) {
@@ -49,7 +48,7 @@ public class YoutubeApiService {
     }
 
     public void updateChannelVideos(String channelId) {
-        List<Video> videos = apiClient.getChannelVideos(channelId, 8);
+        List<Video> videos = apiClient.getVideos(channelId, 8);
 
     }
 }
