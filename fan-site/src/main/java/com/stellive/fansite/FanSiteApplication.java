@@ -15,6 +15,12 @@ public class FanSiteApplication {
 
 	@Bean
 	@Profile("local")
+	public TestDataInit localDataInit(YoutubeApiService youtubeApiService) {
+		return new TestDataInit(youtubeApiService);
+	}
+
+	@Bean
+	@Profile("test")
 	public TestDataInit testDataInit(YoutubeApiService youtubeApiService) {
 		return new TestDataInit(youtubeApiService);
 	}

@@ -15,6 +15,6 @@ create table Video
     publish_time    datetime,
     title           varchar(32),
     thumbnail_url   varchar(64),
-    primary key (id)
+    primary key (id),
     foreign key (channel_id) references Channel(id)
 );

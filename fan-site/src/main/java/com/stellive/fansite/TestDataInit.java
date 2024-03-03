@@ -1,5 +1,7 @@
 package com.stellive.fansite;
 
+import com.stellive.fansite.domain.Channel;
+import com.stellive.fansite.domain.ChannelId;
 import com.stellive.fansite.service.YoutubeApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,8 @@ public class TestDataInit {
     public void initData() {
         log.info("test data init");
         youtubeApiService.updateAllChannels();
+        Channel findChannel = youtubeApiService.findChannelByExternalId(ChannelId.MASHIRO.getExternalId());
+        log.info("channel={}", findChannel);
     }
 
 }

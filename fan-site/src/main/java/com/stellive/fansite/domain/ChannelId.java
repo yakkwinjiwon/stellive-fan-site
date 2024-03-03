@@ -15,7 +15,7 @@ public enum ChannelId {
     MASHIRO(4L, "UC_eeSpMBz8PG4ssdBPnP07g"),
     LIZE(5L, "UC7-m6jQLinZQWIbwm9W-1iw"),
     TABI(6L, "UCAHVQ44O81aehLWfy9O6Elw"),
-    OFFICIAL(7L, "UC2b4WRE5BZ6SIUWBeJU8rwg");
+    OFFICIAL(100L, "UC2b4WRE5BZ6SIUWBeJU8rwg");
 
     private final Long id;
     private final String externalId;
