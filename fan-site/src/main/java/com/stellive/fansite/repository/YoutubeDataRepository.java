@@ -28,6 +28,11 @@ public class YoutubeDataRepository implements YoutubeRepository {
     }
 
     @Override
+    public Optional<Channel> findChannelByExternalId(String externalId) {
+        return channelRepository.findChannelByExternalId(externalId);
+    }
+
+    @Override
     public List<Video> saveChannelVideos(List<Video> videos) {
         return videoRepository.saveAll(videos);
     }
