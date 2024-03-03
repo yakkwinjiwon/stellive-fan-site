@@ -8,6 +8,7 @@ import com.stellive.fansite.client.searchlist.SearchSnippet;
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.client.channellist.ChannelList;
 import com.stellive.fansite.client.channellist.ChannelItem;
+import com.stellive.fansite.domain.ChannelId;
 import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.exceptions.JsonParsingException;
 import com.stellive.fansite.repository.YoutubeRepository;
@@ -39,18 +40,18 @@ public class YoutubeApiClient {
     private final ObjectMapper objectMapper;
     private final ApiUtils apiUtils;
 
-    public Channel getChannel(String channelId) {
-        ResponseEntity<String> response = fetchChannel(channelId);
+    public Channel getChannel(ChannelId channelId) {
+        ResponseEntity<String> response = fetchChannel(channelId.getExternalId());
         try {
-            return parseChannel(response);
+            return parseChannel(response, channelId.getId());
         } catch (JsonProcessingException e) {
             throw new JsonParsingException("JSON parsing error", e);
         }
     }
-    public List<Video> getVideos(String channelId, Integer maxResults) {
-        ResponseEntity<String> response = fetchSearch(channelId, maxResults);
+    public List<Video> getVideos(ChannelId channelId, Integer maxResults) {
+        ResponseEntity<String> response = fetchSearch(channelId.getExternalId(), maxResults);
         try {
-            return parseVideos(channelId, response);
+            return parseVideos(response, channelId.getId());
         } catch (JsonProcessingException e) {
             throw new JsonParsingException("JSON parsing error", e);
         }
@@ -83,22 +84,22 @@ public class YoutubeApiClient {
                 .build().toUri();
     }
 
-    private Channel parseChannel(ResponseEntity<String> response) throws JsonProcessingException {
+    private Channel parseChannel(ResponseEntity<String> response, Long id) throws JsonProcessingException {
         if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
             String result = response.getBody();
             ChannelList channelList = objectMapper.readValue(result, ChannelList.class);
-            return buildChannel(channelList);
+            return buildChannel(channelList, id);
         } else {
             log.error("YouTube API responded with status code: {}", response.getStatusCode());
             return new Channel();
         }
     }
-    private List<Video> parseVideos(String channelId, ResponseEntity<String> response) throws JsonProcessingException {
+    private List<Video> parseVideos(ResponseEntity<String> response, Long id) throws JsonProcessingException {
         if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
             String result = response.getBody();
             SearchList searchList = objectMapper.readValue(result, SearchList.class);
             List<SearchItem> items = searchList.getItems();
-            Channel channel = repository.findChannelByExternalId(channelId).orElseGet(Channel::new);
+            Channel channel = repository.findChannelById(id).orElseGet(Channel::new);
             return buildVideos(items, channel);
         } else {
             log.error("YouTube API responded with status code: {}", response.getStatusCode());
@@ -106,9 +107,10 @@ public class YoutubeApiClient {
         }
     }
 
-    private Channel buildChannel(ChannelList channelList) {
+    private Channel buildChannel(ChannelList channelList, Long id) {
         ChannelItem item = channelList.getItems().getFirst();
         return Channel.builder()
+                .id(id)
                 .externalId(item.getId())
                 .handle(item.getSnippet().getCustomUrl())
                 .thumbnailUrl(item.getSnippet().getThumbnails().getHigh().getUrl())

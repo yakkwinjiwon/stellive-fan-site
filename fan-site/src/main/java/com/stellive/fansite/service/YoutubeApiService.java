@@ -2,12 +2,14 @@ package com.stellive.fansite.service;
 
 import com.stellive.fansite.client.YoutubeApiClient;
 import com.stellive.fansite.domain.Channel;
+import com.stellive.fansite.domain.ChannelId;
 import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.repository.YoutubeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.stellive.fansite.domain.ChannelId.*;
@@ -22,11 +24,11 @@ public class YoutubeApiService {
     private final YoutubeRepository repository;
 
     public String test(){
-        Channel channel = apiClient.getChannel(CHANNEL_ID_MASHIRO);
+        Channel channel = apiClient.getChannel(MASHIRO);
         log.info("channel={}", channel);
         repository.saveChannel(channel);
 
-        List<Video> videos = apiClient.getVideos(CHANNEL_ID_MASHIRO, 2);
+        List<Video> videos = apiClient.getVideos(MASHIRO, 2);
         log.info("videos={}", videos);
         repository.saveVideos(videos);
 
@@ -35,7 +37,7 @@ public class YoutubeApiService {
 
         return "ok";
     }
-    public Channel updateChannel(String channelId) {
+    public Channel updateChannel(ChannelId channelId) {
         Channel channel = apiClient.getChannel(channelId);
         return repository.saveChannel(channel);
     }
@@ -44,24 +46,18 @@ public class YoutubeApiService {
 
     }
     public void updateAllChannels() {
-        for (int i = 1; i <= values().length; i++) {
-            updateChannel(findExternalIdById())
-        }
-        updateChannel(KANNA.getExternalId());
-        updateChannel(YUNI.getExternalId());
-        updateChannel(HINA.getExternalId());
-        updateChannel(MASHIRO.getExternalId());
-        updateChannel(LIZE.getExternalId());
-        updateChannel(TABI.getExternalId());
-        updateChannel(OFFICIAL.getExternalId());
+        Arrays.stream(ChannelId.values())
+                        .forEach(this::updateChannel);
     }
 
     public Channel findChannelById(Long id) {
         return repository.findChannelById(id).orElseGet(Channel::new);
     }
+    public Channel findChannelByExternalId(String externalId) {
+        return repository.findChannelByExternalId(externalId).orElseGet(Channel::new);
+    }
 
     public void updateChannelVideos(String channelId) {
-        List<Video> videos = apiClient.getVideos(channelId, 8);
 
     }
 }
