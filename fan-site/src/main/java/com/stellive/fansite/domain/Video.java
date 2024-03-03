@@ -18,12 +18,14 @@ public class Video {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "channel_id")
     private Channel channel;
-    private String thumbnailUrl;
-    private String linkUrl;
-    private String title;
+
+    private String externalId;
     private Instant publishTime;
+    private String title;
+    private String thumbnailUrl;
 }

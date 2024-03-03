@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface YoutubeChannelDataRepository extends JpaRepository<Channel, Long> {
 
-    Optional<Channel> findChannelByExternalId(String externalId);
+    Optional<Channel> findByExternalId(String externalId);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stellive.fansite.client.searchlist.SearchItem;
 import com.stellive.fansite.client.searchlist.SearchList;
+import com.stellive.fansite.client.searchlist.SearchSnippet;
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.client.channellist.ChannelList;
 import com.stellive.fansite.client.channellist.ChannelItem;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,23 +50,7 @@ public class YoutubeApiClient {
     public List<Video> getVideos(String channelId, Integer maxResults) {
         ResponseEntity<String> response = fetchSearch(channelId, maxResults);
         try {
-            if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
-                String result = response.getBody();
-                SearchList searchList = objectMapper.readValue(result, SearchList.class);
-                List<SearchItem> items = searchList.getItems();
-                Channel channel = repository.findChannelByExternalId(channelId).orElseGet(Channel::new);
-
-                List<Video> videos = new ArrayList<>();
-
-                items.forEach(item -> {
-                    Video.builder()
-                            .
-                })
-                return videos;
-            } else {
-                log.error("YouTube API responded with status code: {}", response.getStatusCode());
-                return Collections.emptyList();
-            }
+            return parseVideos(channelId, response);
         } catch (JsonProcessingException e) {
             throw new JsonParsingException("JSON parsing error", e);
         }
@@ -77,26 +63,6 @@ public class YoutubeApiClient {
     private ResponseEntity<String> fetchSearch(String channelId, Integer maxResults) {
         URI uri = getSearchUri(channelId, maxResults);
         return restTemplate.getForEntity(uri, String.class);
-    }
-
-    private Channel parseChannel(ResponseEntity<String> response) throws JsonProcessingException {
-        if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
-            String result = response.getBody();
-            ChannelList channelList = objectMapper.readValue(result, ChannelList.class);
-            return buildChannel(channelList);
-        } else {
-            log.error("YouTube API responded with status code: {}", response.getStatusCode());
-            return new Channel();
-        }
-    }
-
-    private Channel buildChannel(ChannelList channelList) {
-        ChannelItem item = channelList.getItems().getFirst();
-        return Channel.builder()
-                .externalId(item.getId())
-                .handle(item.getSnippet().getCustomUrl())
-                .thumbnailUrl(item.getSnippet().getThumbnails().getHigh().getUrl())
-                .build();
     }
 
     private URI getChannelUri(String channelId) {
@@ -117,6 +83,52 @@ public class YoutubeApiClient {
                 .build().toUri();
     }
 
+    private Channel parseChannel(ResponseEntity<String> response) throws JsonProcessingException {
+        if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
+            String result = response.getBody();
+            ChannelList channelList = objectMapper.readValue(result, ChannelList.class);
+            return buildChannel(channelList);
+        } else {
+            log.error("YouTube API responded with status code: {}", response.getStatusCode());
+            return new Channel();
+        }
+    }
+    private List<Video> parseVideos(String channelId, ResponseEntity<String> response) throws JsonProcessingException {
+        if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
+            String result = response.getBody();
+            SearchList searchList = objectMapper.readValue(result, SearchList.class);
+            List<SearchItem> items = searchList.getItems();
+            Channel channel = repository.findChannelByExternalId(channelId).orElseGet(Channel::new);
+            return buildVideos(items, channel);
+        } else {
+            log.error("YouTube API responded with status code: {}", response.getStatusCode());
+            return Collections.emptyList();
+        }
+    }
+
+    private Channel buildChannel(ChannelList channelList) {
+        ChannelItem item = channelList.getItems().getFirst();
+        return Channel.builder()
+                .externalId(item.getId())
+                .handle(item.getSnippet().getCustomUrl())
+                .thumbnailUrl(item.getSnippet().getThumbnails().getHigh().getUrl())
+                .build();
+    }
+    private static List<Video> buildVideos(List<SearchItem> items, Channel channel) {
+        List<Video> videos = new ArrayList<>();
+        items.forEach(item -> {
+            SearchSnippet snippet = item.getSnippet();
+            Video video = Video.builder()
+                    .channel(channel)
+                    .externalId(item.getId().getVideoId())
+                    .publishTime(Instant.parse(snippet.getPublishTime()))
+                    .title(snippet.getTitle())
+                    .thumbnailUrl(snippet.getThumbnails().getHigh().getUrl())
+                    .build();
+            videos.add(video);
+        });
+        return videos;
+    }
 
 }
 

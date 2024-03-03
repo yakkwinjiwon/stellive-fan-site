@@ -11,7 +11,9 @@ public interface YoutubeRepository {
     Channel saveChannel(Channel channel);
     Optional<Channel> findChannelById(Long id);
     Optional<Channel> findChannelByExternalId(String externalId);
-    List<Video> saveChannelVideos(List<Video> videos);
+    List<Video> saveVideos(List<Video> videos);
+
+    List<Video> findVideosByChannelId(Long id);
     List<Video> saveAllVideos(List<Video> videos);
 
 

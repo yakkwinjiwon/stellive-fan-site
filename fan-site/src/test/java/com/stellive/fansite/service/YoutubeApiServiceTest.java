@@ -1,6 +1,7 @@
 package com.stellive.fansite.service;
 
 import com.stellive.fansite.domain.Channel;
+import com.stellive.fansite.domain.ChannelId;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.stellive.fansite.domain.ChannelId.*;
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -52,12 +54,12 @@ class YoutubeApiServiceTest {
         Channel channel6 = youtubeApiService.findChannelById(6L);
         Channel channel7 = youtubeApiService.findChannelById(7L);
 
-        assertThat(channel1.getExternalId()).isEqualTo(CHANNEL_ID_KANNA);
-        assertThat(channel2.getExternalId()).isEqualTo(CHANNEL_ID_YUNI);
-        assertThat(channel3.getExternalId()).isEqualTo(CHANNEL_ID_HINA);
-        assertThat(channel4.getExternalId()).isEqualTo(CHANNEL_ID_MASHIRO);
-        assertThat(channel5.getExternalId()).isEqualTo(CHANNEL_ID_LIZE);
-        assertThat(channel6.getExternalId()).isEqualTo(CHANNEL_ID_TABI);
-        assertThat(channel7.getExternalId()).isEqualTo(CHANNEL_ID_OFFICIAL);
+        assertThat(channel1.getExternalId()).isEqualTo(KANNA.getId());
+        assertThat(channel2.getExternalId()).isEqualTo(YUNI.getId());
+        assertThat(channel3.getExternalId()).isEqualTo(HINA.getId());
+        assertThat(channel4.getExternalId()).isEqualTo(MASHIRO.getId());
+        assertThat(channel5.getExternalId()).isEqualTo(LIZE.getId());
+        assertThat(channel6.getExternalId()).isEqualTo(TABI.getId());
+        assertThat(channel7.getExternalId()).isEqualTo(OFFICIAL.getId());
     }
 }

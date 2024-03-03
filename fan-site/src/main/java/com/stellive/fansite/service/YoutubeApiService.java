@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.stellive.fansite.domain.ChannelId.*;
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
 @Service
@@ -21,8 +22,17 @@ public class YoutubeApiService {
     private final YoutubeRepository repository;
 
     public String test(){
-        apiClient.getChannel(CHANNEL_ID_MASHIRO);
-        apiClient.getVideos(CHANNEL_ID_OFFICIAL, 2);
+        Channel channel = apiClient.getChannel(CHANNEL_ID_MASHIRO);
+        log.info("channel={}", channel);
+        repository.saveChannel(channel);
+
+        List<Video> videos = apiClient.getVideos(CHANNEL_ID_MASHIRO, 2);
+        log.info("videos={}", videos);
+        repository.saveVideos(videos);
+
+        List<Video> findVideos = repository.findVideosByChannelId(1L);
+        log.info("findVideos={}", findVideos);
+
         return "ok";
     }
     public Channel updateChannel(String channelId) {
@@ -34,13 +44,16 @@ public class YoutubeApiService {
 
     }
     public void updateAllChannels() {
-        updateChannel(CHANNEL_ID_KANNA);
-        updateChannel(CHANNEL_ID_YUNI);
-        updateChannel(CHANNEL_ID_HINA);
-        updateChannel(CHANNEL_ID_MASHIRO);
-        updateChannel(CHANNEL_ID_LIZE);
-        updateChannel(CHANNEL_ID_TABI);
-        updateChannel(CHANNEL_ID_OFFICIAL);
+        for (int i = 1; i <= values().length; i++) {
+            updateChannel(findExternalIdById())
+        }
+        updateChannel(KANNA.getExternalId());
+        updateChannel(YUNI.getExternalId());
+        updateChannel(HINA.getExternalId());
+        updateChannel(MASHIRO.getExternalId());
+        updateChannel(LIZE.getExternalId());
+        updateChannel(TABI.getExternalId());
+        updateChannel(OFFICIAL.getExternalId());
     }
 
     public Channel findChannelById(Long id) {
