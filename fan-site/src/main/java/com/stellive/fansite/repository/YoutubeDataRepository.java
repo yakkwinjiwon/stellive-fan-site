@@ -1,6 +1,7 @@
 package com.stellive.fansite.repository;
 
 import com.stellive.fansite.domain.Channel;
+import com.stellive.fansite.domain.ChannelId;
 import com.stellive.fansite.domain.Video;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,23 +29,14 @@ public class YoutubeDataRepository implements YoutubeRepository {
     }
 
     @Override
-    public Optional<Channel> findChannelByExternalId(String externalId) {
-        return channelRepository.findByExternalId(externalId);
-    }
-
-    @Override
     public List<Video> saveVideos(List<Video> videos) {
         return videoRepository.saveAll(videos);
     }
 
     @Override
-    public List<Video> findVideosByChannelId(Long channelId) {
-        return videoRepository.findByChannelId(channelId);
+    public List<Video> findVideosByChannelId(Long id) {
+        return videoRepository.findByChannelId(id);
     }
 
-    @Override
-    public List<Video> saveAllVideos(List<Video> videos) {
-        return null;
-    }
 
 }
