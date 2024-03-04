@@ -16,10 +16,12 @@ public class TestDataInit {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
-        log.info("test data init");
+        log.info("init data");
         youtubeApiService.updateAllChannels();
-        Channel findChannel = youtubeApiService.findChannelByExternalId(ChannelId.MASHIRO.getExternalId());
-        log.info("channel={}", findChannel);
+        log.info("Updated All Channels");
+        youtubeApiService.updateAllVideos();
+        log.info("Updated All Videos");
+
     }
 
 }
