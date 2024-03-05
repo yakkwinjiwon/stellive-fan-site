@@ -29,6 +29,11 @@ public class YoutubeDataRepository implements YoutubeRepository {
     }
 
     @Override
+    public List<Channel> findAllChannels() {
+        return channelRepository.findAll();
+    }
+
+    @Override
     public List<Video> saveVideos(List<Video> videos) {
         return videoRepository.saveAll(videos);
     }
