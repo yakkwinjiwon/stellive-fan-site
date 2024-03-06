@@ -32,7 +32,7 @@ public class YoutubeChannelClient {
     private final ApiUtils apiUtils;
 
     public Channel getChannel(ChannelId channelId) {
-        ResponseEntity<String> response = fetchChannel(channelId.getExternalId());
+        ResponseEntity<String> response = fetchChannel(channelId.getYoutubeId());
         try {
             Channel channel = parseChannel(response, channelId.getId());
             log.info("Fetched Youtube Channel={}", channel);

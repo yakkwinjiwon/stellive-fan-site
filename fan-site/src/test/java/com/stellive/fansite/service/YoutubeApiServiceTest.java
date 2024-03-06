@@ -28,7 +28,7 @@ class YoutubeApiServiceTest {
         Arrays.stream(ChannelId.values())
                 .forEach(stella -> {
                     Channel findChannel = youtubeApiService.findChannelById(stella.getId());
-                    assertThat(findChannel.getExternalId()).isEqualTo(stella.getExternalId());
+                    assertThat(findChannel.getExternalId()).isEqualTo(stella.getYoutubeId());
                 });
     }
 

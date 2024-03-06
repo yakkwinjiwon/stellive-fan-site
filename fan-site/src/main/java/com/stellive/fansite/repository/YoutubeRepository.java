@@ -15,5 +15,4 @@ public interface YoutubeRepository {
     List<Video> saveVideos(List<Video> videos);
     List<Video> findVideosByChannelId(Long id);
 
-
 }
