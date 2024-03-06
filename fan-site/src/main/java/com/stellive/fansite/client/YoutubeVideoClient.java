@@ -92,7 +92,7 @@ public class YoutubeVideoClient {
                     .build();
             videos.add(video);
         });
-        
+
         return videos;
     }
 }
