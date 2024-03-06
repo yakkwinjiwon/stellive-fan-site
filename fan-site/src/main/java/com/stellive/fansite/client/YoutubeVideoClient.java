@@ -39,7 +39,7 @@ public class YoutubeVideoClient {
     private final ApiUtils apiUtils;
 
     public List<Video> getVideos(ChannelId channelId, Integer maxResults) {
-        ResponseEntity<String> response = fetchSearch(channelId.getExternalId(), maxResults);
+        ResponseEntity<String> response = fetchSearch(channelId.getYoutubeId(), maxResults);
         try {
             List<Video> videos = parseVideos(response, channelId.getId());
             log.info("Fetched Youtube Videos={}", videos);
@@ -92,6 +92,7 @@ public class YoutubeVideoClient {
                     .build();
             videos.add(video);
         });
+        
         return videos;
     }
 }
