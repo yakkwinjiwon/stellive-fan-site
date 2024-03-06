@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/")
+@RequestMapping("/rest")
 public class HomeController {
 
     private final YoutubeApiService youtubeApiService;

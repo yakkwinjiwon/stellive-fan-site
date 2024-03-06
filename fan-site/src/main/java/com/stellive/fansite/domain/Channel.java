@@ -19,6 +19,7 @@ public class Channel {
     @Id
     private Long id;
 
+    private String name;
     private String externalId;
     private String handle;
     private String thumbnailUrl;

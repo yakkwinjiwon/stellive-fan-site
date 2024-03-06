@@ -63,9 +63,11 @@ public class YoutubeApiService {
         return repository.findChannelById(id).orElseGet(Channel::new);
     }
 
-
-
     public List<Video> findVideosByChannelId(Long id) {
         return repository.findVideosByChannelId(id);
+    }
+
+    public List<Channel> findAllChannels() {
+        return repository.findAllChannels();
     }
 }
