@@ -1,20 +1,19 @@
 package com.stellive.fansite.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Entity
+@Table(name = "yt_user")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "videos")
 @EqualsAndHashCode
-public class Channel {
+public class YTUser {
 
     @Id
     private Long id;
@@ -24,6 +23,6 @@ public class Channel {
     private String handle;
     private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "channel")
-    private List<Video> videos;
+    @OneToMany(mappedBy = "user")
+    private List<YTVideo> videos;
 }
