@@ -1,4 +1,4 @@
-package com.stellive.fansite.client.channellist;
+package com.stellive.fansite.dto.channellist;
 
 import lombok.Getter;
 

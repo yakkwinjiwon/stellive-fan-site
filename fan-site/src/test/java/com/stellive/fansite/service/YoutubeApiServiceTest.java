@@ -1,8 +1,8 @@
 package com.stellive.fansite.service;
 
-import com.stellive.fansite.domain.Channel;
-import com.stellive.fansite.domain.ChannelId;
-import com.stellive.fansite.domain.Video;
+import com.stellive.fansite.domain.YTUser;
+import com.stellive.fansite.domain.Stella;
+import com.stellive.fansite.domain.YTVideo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.stellive.fansite.domain.ChannelId.*;
+import static com.stellive.fansite.domain.Stella.*;
 import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
@@ -21,43 +21,43 @@ import static org.assertj.core.api.Assertions.*;
 class YoutubeApiServiceTest {
 
     @Autowired
-    YoutubeApiService youtubeApiService;
+    YTApiService youtubeApiService;
 
     @Test
     void testDataInitTest() {
-        Arrays.stream(ChannelId.values())
+        Arrays.stream(Stella.values())
                 .forEach(stella -> {
-                    Channel findChannel = youtubeApiService.findChannelById(stella.getId());
+                    YTUser findChannel = youtubeApiService.findYTUserById(stella.getId());
                     assertThat(findChannel.getExternalId()).isEqualTo(stella.getYoutubeId());
                 });
     }
 
     @Test
     void updateChannelTest() {
-        Channel channel = youtubeApiService.updateChannel(MASHIRO);
+        YTUser channel = youtubeApiService.updateYTUser(MASHIRO);
 
         assertThat(channel.getId()).isEqualTo(MASHIRO.getId());
     }
 
     @Test
     void findChannelByIdTest() {
-        Channel channel = youtubeApiService.findChannelById(MASHIRO.getId());
+        YTUser channel = youtubeApiService.findYTUserById(MASHIRO.getId());
 
         assertThat(channel.getId()).isEqualTo(MASHIRO.getId());
     }
 
     @Test
     void updateVideosTest() {
-        List<Video> videos = youtubeApiService.updateVideos(MASHIRO);
+        List<YTVideo> videos = youtubeApiService.updateYTVideos(MASHIRO);
 
-        assertThat(videos.getFirst().getChannel().getId()).isEqualTo(MASHIRO.getId());
+        assertThat(videos.getFirst().getUser().getId()).isEqualTo(MASHIRO.getId());
     }
 
     @Test
     void findVideosByIdTest() {
-        List<Video> videos = youtubeApiService.findVideosByChannelId(MASHIRO.getId());
+        List<YTVideo> videos = youtubeApiService.findYTVideosByYTUserId(MASHIRO.getId());
 
-        assertThat(videos.getFirst().getChannel().getId()).isEqualTo(MASHIRO.getId());
+        assertThat(videos.getFirst().getUser().getId()).isEqualTo(MASHIRO.getId());
     }
 
     @Test
