@@ -1,28 +1,28 @@
 package com.stellive.fansite.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.Map;
 
 @Entity
+@Table(name = "yt_video")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Video {
+public class YTVideo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "channel_id")
-    private Channel channel;
+    @JoinColumn(name = "user_id")
+    private YTUser user;
 
     private String externalId;
     private Instant publishTime;

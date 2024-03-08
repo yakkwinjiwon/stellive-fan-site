@@ -1,4 +1,4 @@
-package com.stellive.fansite.client.searchlist;
+package com.stellive.fansite.dto.searchlist;
 
 import lombok.Getter;
 

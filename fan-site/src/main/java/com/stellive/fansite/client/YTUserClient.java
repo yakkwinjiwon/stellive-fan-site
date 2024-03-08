@@ -2,12 +2,12 @@ package com.stellive.fansite.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stellive.fansite.domain.Channel;
-import com.stellive.fansite.client.channellist.ChannelList;
-import com.stellive.fansite.client.channellist.ChannelItem;
-import com.stellive.fansite.domain.ChannelId;
+import com.stellive.fansite.dto.channellist.ChannelList;
+import com.stellive.fansite.dto.channellist.ChannelItem;
+import com.stellive.fansite.domain.Stella;
+import com.stellive.fansite.domain.YTUser;
 import com.stellive.fansite.exceptions.JsonParsingException;
-import com.stellive.fansite.repository.YoutubeRepository;
+import com.stellive.fansite.repository.YTRepository;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,63 +18,65 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.YTApiConst.*;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class YoutubeChannelClient {
+public class YTUserClient {
 
-    private final YoutubeRepository repository;
+    private final YTRepository repository;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final ApiUtils apiUtils;
 
-    public Channel getChannel(ChannelId channelId) {
-        ResponseEntity<String> response = fetchChannel(channelId.getYoutubeId());
+    public YTUser getYTUser(Stella stella) {
+        ResponseEntity<String> response = fetchChannel(stella);
         try {
-            Channel channel = parseChannel(response, channelId.getId());
-            log.info("Fetched Youtube Channel={}", channel);
-            return channel;
+            YTUser user = parseChannel(stella, response);
+            log.info("Fetched YoutubeChannel={}", user);
+            return user;
         } catch (JsonProcessingException e) {
             throw new JsonParsingException("JSON parsing error", e);
         }
     }
 
-    private ResponseEntity<String> fetchChannel(String externalId) {
-        URI uri = getChannelUri(externalId);
+    private ResponseEntity<String> fetchChannel(Stella stella) {
+        URI uri = getChannelUri(stella);
         return restTemplate.getForEntity(uri, String.class);
     }
 
-    private URI getChannelUri(String externalId) {
+    private URI getChannelUri(Stella stella) {
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
                 .queryParam(PARAM_CHANNEL_KEY, apiUtils.getYoutubeApiKey())
                 .queryParam(PARAM_CHANNEL_PART, PART_SNIPPET)
-                .queryParam(PARAM_CHANNEL_ID, externalId)
+                .queryParam(PARAM_CHANNEL_ID, stella.getYoutubeId())
                 .build().toUri();
     }
 
-    private Channel parseChannel(ResponseEntity<String> response, Long id) throws JsonProcessingException {
+    private YTUser parseChannel(Stella stella, ResponseEntity<String> response) throws JsonProcessingException {
         if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
             String result = response.getBody();
             ChannelList channelList = objectMapper.readValue(result, ChannelList.class);
-            return buildChannel(channelList, id);
+            return buildYTUser(stella, channelList);
         } else {
             log.error("YouTube API responded with status code: {}", response.getStatusCode());
-            return new Channel();
+            return new YTUser();
         }
     }
 
-    private Channel buildChannel(ChannelList channelList, Long id) {
+    private YTUser buildYTUser(Stella stella, ChannelList channelList) {
         ChannelItem item = channelList.getItems().getFirst();
-        repository.findVideosByChannelId(id);
-        return Channel.builder()
-                .id(id)
+        return YTUser.builder()
+                .id(stella.getId())
+                .name(stella.getFullName())
                 .externalId(item.getId())
                 .handle(item.getSnippet().getCustomUrl())
                 .thumbnailUrl(item.getSnippet().getThumbnails().getHigh().getUrl())
+                .videos(repository.findYTVideosByYTUserId(stella.getId()))
                 .build();
     }
+
 }
 
