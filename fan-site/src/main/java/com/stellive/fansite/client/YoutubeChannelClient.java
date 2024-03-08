@@ -71,7 +71,6 @@ public class YoutubeChannelClient {
         repository.findVideosByChannelId(id);
         return Channel.builder()
                 .id(id)
-                .name()
                 .externalId(item.getId())
                 .handle(item.getSnippet().getCustomUrl())
                 .thumbnailUrl(item.getSnippet().getThumbnails().getHigh().getUrl())
