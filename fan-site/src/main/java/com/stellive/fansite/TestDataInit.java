@@ -15,9 +15,9 @@ public class TestDataInit {
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("init data");
-        youtubeApiService.updateAllYTUsers();
+//        youtubeApiService.updateAllYTUsers();
         log.info("Updated All Channels");
-        youtubeApiService.updateAllYTVideos();
+//        youtubeApiService.updateAllYTVideos();
         log.info("Updated All Videos");
 
     }
