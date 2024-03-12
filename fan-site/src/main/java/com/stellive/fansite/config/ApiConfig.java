@@ -2,9 +2,6 @@ package com.stellive.fansite.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stellive.fansite.utils.ApiUtils;
-import com.twitter.clientlib.TwitterCredentialsBearer;
-import com.twitter.clientlib.api.TwitterApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -24,10 +21,4 @@ public class ApiConfig {
         return mapper;
     }
 
-    @Bean
-    public TwitterApi twitterApi(ApiUtils apiUtils) {
-        return new TwitterApi(
-                new TwitterCredentialsBearer(apiUtils.getTwitterBearerToken())
-        );
-    }
 }
