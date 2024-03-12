@@ -10,8 +10,7 @@ import java.util.Arrays;
 public enum Stella {
 
     KANNA(1L, "칸나", "아이리 칸나",
-            "UCKzfyYWHQ92z_2jUcSABM8Q"
-            ),
+            "UCKzfyYWHQ92z_2jUcSABM8Q"),
     YUNI(2L, "유니", "아야츠노 유니",
             "UClbYIn9LDbbFZ9w2shX3K0g"),
     HINA(3L, "히나", "시라유키 히나",
