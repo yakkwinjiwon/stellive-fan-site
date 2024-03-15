@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class ApiConfig {
+public class AppConfig {
 
     @Bean
     public RestTemplate restTemplate() {
@@ -20,5 +20,4 @@ public class ApiConfig {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper;
     }
-
 }

@@ -12,34 +12,34 @@ import java.util.Optional;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class YTDataRepository implements YTRepository {
+public class YTDataRepo implements YTRepo {
 
-    private final YTUserDataRepository userRepository;
-    private final YTVideoDataRepository videoRepository;
+    private final YTUserDataRepo userRepo;
+    private final YTVideoDataRepo videoRepo;
 
     @Override
     public YTUser saveYTUser(YTUser channel) {
-        return userRepository.save(channel);
+        return userRepo.save(channel);
     }
 
     @Override
     public Optional<YTUser> findYTUserById(Long id) {
-        return userRepository.findById(id);
+        return userRepo.findById(id);
     }
 
     @Override
     public List<YTUser> findAllYTUsers() {
-        return userRepository.findAll();
+        return userRepo.findAll();
     }
 
     @Override
     public List<YTVideo> saveYTVideos(List<YTVideo> videos) {
-        return videoRepository.saveAll(videos);
+        return videoRepo.saveAll(videos);
     }
 
     @Override
     public List<YTVideo> findYTVideosByYTUserId(Long id) {
-        return videoRepository.findAllByUserId(id);
+        return videoRepo.findAllByUserId(id);
     }
 
 

@@ -5,7 +5,7 @@ import com.stellive.fansite.client.YTVideoClient;
 import com.stellive.fansite.domain.YTUser;
 import com.stellive.fansite.domain.Stella;
 import com.stellive.fansite.domain.YTVideo;
-import com.stellive.fansite.repository.YTRepository;
+import com.stellive.fansite.repository.YTRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class YTApiService {
 
     private final YTUserClient userClient;
     private final YTVideoClient videoClient;
-    private final YTRepository repository;
+    private final YTRepo repo;
 
     public String test(){
 
@@ -34,7 +34,7 @@ public class YTApiService {
 
     public YTUser updateYTUser(Stella stella) {
         YTUser channel = userClient.getYTUser(stella);
-        return repository.saveYTUser(channel);
+        return repo.saveYTUser(channel);
     }
 
     public void updateAllYTUsers() {
@@ -43,16 +43,16 @@ public class YTApiService {
     }
 
     public YTUser findYTUserById(Long id) {
-        return repository.findYTUserById(id).orElseGet(YTUser::new);
+        return repo.findYTUserById(id).orElseGet(YTUser::new);
     }
 
     public List<YTUser> findAllYTUsers() {
-        return repository.findAllYTUsers();
+        return repo.findAllYTUsers();
     }
 
     public List<YTVideo> updateYTVideos(Stella stella) {
         List<YTVideo> videos = videoClient.getYTVideos(stella, 2);
-        return repository.saveYTVideos(videos);
+        return repo.saveYTVideos(videos);
     }
 
     public void updateAllYTVideos() {
@@ -61,7 +61,7 @@ public class YTApiService {
     }
 
     public List<YTVideo> findYTVideosByYTUserId(Long id) {
-        return repository.findYTVideosByYTUserId(id);
+        return repo.findYTVideosByYTUserId(id);
     }
 
 }
