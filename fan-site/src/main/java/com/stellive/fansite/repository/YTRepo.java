@@ -6,7 +6,7 @@ import com.stellive.fansite.domain.YTVideo;
 import java.util.List;
 import java.util.Optional;
 
-public interface YTRepository {
+public interface YTRepo {
 
     YTUser saveYTUser(YTUser channel);
     Optional<YTUser> findYTUserById(Long id);
