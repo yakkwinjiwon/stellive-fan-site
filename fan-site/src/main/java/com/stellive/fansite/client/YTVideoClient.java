@@ -2,14 +2,14 @@ package com.stellive.fansite.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stellive.fansite.dto.searchlist.SearchList;
-import com.stellive.fansite.dto.searchlist.SearchSnippet;
-import com.stellive.fansite.dto.searchlist.SearchItem;
+import com.stellive.fansite.dto.search.SearchList;
+import com.stellive.fansite.dto.search.SearchSnippet;
+import com.stellive.fansite.dto.search.SearchItem;
 import com.stellive.fansite.domain.YTUser;
 import com.stellive.fansite.domain.Stella;
 import com.stellive.fansite.domain.YTVideo;
 import com.stellive.fansite.exceptions.JsonParsingException;
-import com.stellive.fansite.repository.YTRepository;
+import com.stellive.fansite.repository.YTRepo;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import static com.stellive.fansite.utils.YTApiConst.TYPE_VIDEO;
 @Slf4j
 public class YTVideoClient {
 
-    private final YTRepository repository;
+    private final YTRepo repo;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -56,7 +56,7 @@ public class YTVideoClient {
 
     private URI getSearchUri(Stella stella, Integer maxResults) {
         return UriComponentsBuilder.fromHttpUrl(URL_SEARCH)
-                .queryParam(PARAM_SEARCH_KEY, apiUtils.getYoutubeApiKey())
+                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
                 .queryParam(PARAM_SEARCH_PART, PART_SNIPPET)
                 .queryParam(PARAM_SEARCH_CHANNEL_ID, stella.getYoutubeId())
                 .queryParam(PARAM_SEARCH_MAX_RESULTS, maxResults)
@@ -82,7 +82,7 @@ public class YTVideoClient {
         items.forEach(item -> {
             SearchSnippet snippet = item.getSnippet();
             YTVideo video = YTVideo.builder()
-                    .user(repository.findYTUserById(stella.getId()).orElseGet(YTUser::new))
+                    .user(repo.findYTUserById(stella.getId()).orElseGet(YTUser::new))
                     .externalId(item.getId().getVideoId())
                     .publishTime(Instant.parse(snippet.getPublishTime()))
                     .title(snippet.getTitle())
