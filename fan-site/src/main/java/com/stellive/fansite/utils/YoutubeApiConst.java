@@ -1,13 +1,6 @@
 package com.stellive.fansite.utils;
 
-public class YTApiConst {
-
-    /**
-     * Channel Handle
-     */
-    public static final String CHANNEL_HANDLE_KANNA = "airikannach";
-    public static final String CHANNEL_HANDLE_YUNI = "airikannach";
-    public static final String CHANNEL_HANDLE_MASHIRO = "neneko_mashiro";
+public class YoutubeApiConst {
 
     /**
      * URL

@@ -6,23 +6,23 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "yt_user")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "videos")
+@ToString(exclude = {"videos"})
 @EqualsAndHashCode
-public class YTUser {
+public class Channel {
 
     @Id
     private Long id;
+
+    @OneToMany(mappedBy = "channel")
+    private List<Video> videos;
 
     private String name;
     private String externalId;
     private String handle;
     private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "user")
-    private List<YTVideo> videos;
 }

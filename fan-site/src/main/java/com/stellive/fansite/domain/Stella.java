@@ -45,14 +45,6 @@ public enum Stella {
     private final String firstName;
     private final String fullName;
     private final String youtubeId;
-    private final List<String> coverSongPLIds;
-
-    public static String findYoutubeIdById(Long id) {
-        return Arrays.stream(Stella.values())
-                .filter(channel -> channel.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No Matching channel for id: " + id))
-                .getYoutubeId();
-    }
+    private final List<String> musicPlaylistIds;
 
 }

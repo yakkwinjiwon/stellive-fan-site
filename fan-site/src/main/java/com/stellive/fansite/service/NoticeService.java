@@ -2,7 +2,7 @@ package com.stellive.fansite.service;
 
 import com.stellive.fansite.domain.Notice;
 import com.stellive.fansite.external.WebScraper;
-import com.stellive.fansite.repository.OffSiteRepo;
+import com.stellive.fansite.repository.Notice.NoticeRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,22 +12,19 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OffSiteService {
+public class NoticeService {
 
-    private final OffSiteRepo repo;
+    private final NoticeRepo noticeRepo;
 
     private final WebScraper webScraper;
 
-    public void updateAll() {
-        List<Notice> updatedNotices = updateNotices();
-    }
-
     public List<Notice> updateNotices() {
         List<Notice> notices = webScraper.getNotices();
-        return repo.saveNotices(notices);
+        log.info("updateNotices={}", notices);
+        return noticeRepo.save(notices);
     }
 
     public List<Notice> findAllNotices() {
-        return repo.findAllNotices();
+        return noticeRepo.findAll();
     }
 }
