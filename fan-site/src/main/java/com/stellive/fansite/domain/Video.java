@@ -7,25 +7,25 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "yt_video")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class YTVideo {
+public class Video {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private YTUser user;
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
 
+    private VideoType videoType;
     private String externalId;
-    private Instant publishTime;
     private String title;
     private String thumbnailUrl;
+    private Instant publishTime;
 }
