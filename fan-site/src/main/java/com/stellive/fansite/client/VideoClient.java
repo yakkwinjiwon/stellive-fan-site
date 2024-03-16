@@ -2,14 +2,15 @@ package com.stellive.fansite.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stellive.fansite.domain.VideoType;
 import com.stellive.fansite.dto.search.SearchList;
 import com.stellive.fansite.dto.search.SearchSnippet;
 import com.stellive.fansite.dto.search.SearchItem;
-import com.stellive.fansite.domain.YTUser;
+import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.Stella;
-import com.stellive.fansite.domain.YTVideo;
+import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.exceptions.JsonParsingException;
-import com.stellive.fansite.repository.YTRepo;
+import com.stellive.fansite.repository.Channel.ChannelRepo;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,24 +25,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.stellive.fansite.utils.YTApiConst.*;
-import static com.stellive.fansite.utils.YTApiConst.TYPE_VIDEO;
+import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.YoutubeApiConst.TYPE_VIDEO;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class YTVideoClient {
+public class VideoClient {
 
-    private final YTRepo repo;
+    private final ChannelRepo channelRepo;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final ApiUtils apiUtils;
 
-    public List<YTVideo> getYTVideos(Stella stella, Integer maxResults) {
+    public List<Video> getVideos(Stella stella, Integer maxResults) {
         ResponseEntity<String> response = fetchSearch(stella, maxResults);
         try {
-            List<YTVideo> videos = parseSearch(stella, response);
+            List<Video> videos = parseSearch(stella, response);
             log.info("Fetched Youtube Videos={}", videos);
             return videos;
         } catch (JsonProcessingException e) {
@@ -65,28 +66,30 @@ public class YTVideoClient {
                 .build().toUri();
     }
 
-    private List<YTVideo> parseSearch(Stella stella, ResponseEntity<String> response) throws JsonProcessingException {
+    private List<Video> parseSearch(Stella stella, ResponseEntity<String> response) throws JsonProcessingException {
         if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
             String result = response.getBody();
             SearchList searchList = objectMapper.readValue(result, SearchList.class);
-            return buildYTVideos(stella, searchList);
+            return buildVideos(stella, searchList);
         } else {
             log.error("YouTube API responded with status code: {}", response.getStatusCode());
             return Collections.emptyList();
         }
     }
 
-    private List<YTVideo> buildYTVideos(Stella stella, SearchList searchList) {
-        List<YTVideo> videos = new ArrayList<>();
+    private List<Video> buildVideos(Stella stella, SearchList searchList) {
+        List<Video> videos = new ArrayList<>();
         List<SearchItem> items = searchList.getItems();
+
         items.forEach(item -> {
             SearchSnippet snippet = item.getSnippet();
-            YTVideo video = YTVideo.builder()
-                    .user(repo.findYTUserById(stella.getId()).orElseGet(YTUser::new))
+            Video video = Video.builder()
+                    .videoType(VideoType.VIDEO)
+                    .channel(channelRepo.findById(stella.getId()).orElseGet(Channel::new))
                     .externalId(item.getId().getVideoId())
-                    .publishTime(Instant.parse(snippet.getPublishTime()))
                     .title(snippet.getTitle())
                     .thumbnailUrl(snippet.getThumbnails().getHigh().getUrl())
+                    .publishTime(Instant.parse(snippet.getPublishTime()))
                     .build();
             videos.add(video);
         });
