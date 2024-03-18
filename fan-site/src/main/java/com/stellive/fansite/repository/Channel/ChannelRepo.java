@@ -9,6 +9,7 @@ public interface ChannelRepo {
 
     Channel save(Channel channel);
     Optional<Channel> findById(Long id);
+    Optional<Channel> findByExternalId(String externalId);
     List<Channel> findAll();
 
 }

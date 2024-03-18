@@ -21,6 +21,11 @@ public class VideoRepoImpl implements VideoRepo {
     }
 
     @Override
+    public List<Video> findByChannelId(Long channelId) {
+        return videoDataRepo.findByChannelId(channelId);
+    }
+
+    @Override
     public List<Video> findByChannelIdAndVideoType(Long channelId, VideoType videoType) {
         return videoDataRepo.findByChannelIdAndVideoType(channelId, videoType);
     }

@@ -27,8 +27,6 @@ public class TestDataInit {
         log.info("Updated All Musics");
         noticeService.updateNotices();
         log.info("Updated Notices");
-
-
     }
 
 }

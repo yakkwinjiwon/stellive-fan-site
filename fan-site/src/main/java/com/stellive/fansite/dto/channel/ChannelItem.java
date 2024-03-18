@@ -8,4 +8,5 @@ public class ChannelItem {
 
     private String id;
     private ChannelSnippet snippet;
+    private ChannelBrandingSettings brandingSettings;
 }

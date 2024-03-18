@@ -26,6 +26,11 @@ public class ChannelRepoImpl implements ChannelRepo {
     }
 
     @Override
+    public Optional<Channel> findByExternalId(String externalId) {
+        return channelDataRepo.findByExternalId(externalId);
+    }
+
+    @Override
     public List<Channel> findAll() {
         return channelDataRepo.findAll();
     }

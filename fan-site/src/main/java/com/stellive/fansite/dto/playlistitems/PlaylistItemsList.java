@@ -7,5 +7,6 @@ import java.util.List;
 @Getter
 public class PlaylistItemsList {
 
+    private String nextPageToken;
     private List<PlaylistItemsItem> items;
 }

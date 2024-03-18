@@ -1,7 +1,7 @@
 package com.stellive.fansite.service;
 
 import com.stellive.fansite.client.ChannelClient;
-import com.stellive.fansite.domain.Stella;
+import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class ChannelService {
 
     public List<Channel> updateAll() {
         List<Channel> channels = new ArrayList<>();
-        Arrays.stream(Stella.values())
+        Arrays.stream(YoutubeChannel.values())
                 .forEach(stella -> {
                     Channel channel = update(stella);
                     channels.add(channel);
@@ -30,7 +30,7 @@ public class ChannelService {
         return channels;
     }
 
-    public Channel update(Stella stella) {
+    public Channel update(YoutubeChannel stella) {
         Channel channel = channelClient.getChannel(stella);
         log.info("updateChannel={}", channel);
         return channelRepo.save(channel);

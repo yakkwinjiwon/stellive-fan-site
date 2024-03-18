@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface VideoDataRepo extends JpaRepository<Video, Long> {
 
+    List<Video> findByChannelId(Long channelId);
     List<Video> findByChannelIdAndVideoType(Long channelId, VideoType videoType);
 }

@@ -2,7 +2,7 @@ package com.stellive.fansite.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stellive.fansite.domain.Stella;
+import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.domain.VideoType;
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.Video;
@@ -38,7 +38,7 @@ public class MusicClient {
     private final ObjectMapper objectMapper;
     private final ApiUtils apiUtils;
 
-    public List<Video> getMusics(Stella stella, String playlistId) {
+    public List<Video> getMusics(YoutubeChannel stella, String playlistId) {
         ResponseEntity<String> response = fetchPlaylistsItem(playlistId);
         try {
             List<Video> musics = parsePlaylistsItem(stella, response);
@@ -55,14 +55,14 @@ public class MusicClient {
     }
 
     private URI getPlaylistsItemUri(String playlistId) {
-        return UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEM)
+        return UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEMS)
                 .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
-                .queryParam(PARAM_PLAYLIST_ITEM_PART, PART_SNIPPET)
-                .queryParam(PARAM_PLAYLIST_ITEM_PLAYLIST_ID, playlistId)
+                .queryParam(PARAM_PLAYLIST_ITEMS_PART, PART_SNIPPET)
+                .queryParam(PARAM_PLAYLIST_ITEMS_PLAYLIST_ID, playlistId)
                 .build().toUri();
     }
 
-    private List<Video> parsePlaylistsItem(Stella stella, ResponseEntity<String> response) throws JsonProcessingException {
+    private List<Video> parsePlaylistsItem(YoutubeChannel stella, ResponseEntity<String> response) throws JsonProcessingException {
         if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
             String result = response.getBody();
             PlaylistItemsList playlistItemsList = objectMapper.readValue(result, PlaylistItemsList.class);
@@ -73,7 +73,7 @@ public class MusicClient {
         }
     }
 
-    private List<Video> buildMusics(Stella stella, PlaylistItemsList playlistItemsList) {
+    private List<Video> buildMusics(YoutubeChannel stella, PlaylistItemsList playlistItemsList) {
         List<Video> musics = new ArrayList<>();
         List<PlaylistItemsItem> items = playlistItemsList.getItems();
 

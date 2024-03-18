@@ -20,9 +20,9 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private List<Video> videos;
 
-    private String name;
     private String externalId;
     private String handle;
     private String thumbnailUrl;
+    private String bannerUrl;
 
 }

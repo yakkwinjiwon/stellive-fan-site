@@ -1,5 +1,6 @@
 package com.stellive.fansite.controller;
 
+import com.stellive.fansite.client.PlaylistItemsClient;
 import com.stellive.fansite.service.ChannelService;
 import com.stellive.fansite.service.NoticeService;
 import com.stellive.fansite.service.VideoService;
@@ -18,10 +19,13 @@ public class HomeController {
     private final ChannelService channelService;
     private final VideoService videoService;
     private final NoticeService noticeService;
+    private final PlaylistItemsClient client;
 
     @GetMapping("")
     public String home() {
         log.info("home");
+
+        client.getVieosFromPlaylist("PLzdLDJsHzz2OrqnrRIVuYJOdC6uID1cjq", false);
 
         return "ok";
     }

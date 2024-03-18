@@ -15,7 +15,6 @@ import java.util.List;
 public class NoticeService {
 
     private final NoticeRepo noticeRepo;
-
     private final WebScraper webScraper;
 
     public List<Notice> updateNotices() {
