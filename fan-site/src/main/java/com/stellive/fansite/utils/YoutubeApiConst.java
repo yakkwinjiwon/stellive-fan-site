@@ -46,5 +46,4 @@ public class YoutubeApiConst {
     public static final String TYPE_VIDEO= "video";
     public static final Integer MAX_RESULTS = 2;
 
-
 }

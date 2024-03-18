@@ -36,7 +36,6 @@ public class VideoService {
                 });
         return videos;
     }
-
     public List<Video> updateVideos(YoutubeChannel stella) {
         List<Video> videos = videoClient.getVideos(stella, VideoType.VIDEO, 2);
         List<Video> replays = videoClient.getVideos(stella, VideoType.REPLAY, 2);

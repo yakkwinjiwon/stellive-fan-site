@@ -23,9 +23,6 @@ public class LocalTestController {
     @GetMapping("")
     public String home(Model model) {
 
-
-
-
         return "home";
     }
 

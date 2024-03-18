@@ -8,6 +8,7 @@ import java.util.List;
 public interface VideoRepo {
 
     List<Video> save(List<Video> videos);
+
     List<Video> findByChannelId(Long channelId);
     List<Video> findByChannelIdAndVideoType(Long channelId, VideoType videoType);
 }

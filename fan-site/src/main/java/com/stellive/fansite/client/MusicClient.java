@@ -2,10 +2,7 @@ package com.stellive.fansite.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stellive.fansite.domain.YoutubeChannel;
-import com.stellive.fansite.domain.VideoType;
-import com.stellive.fansite.domain.Channel;
-import com.stellive.fansite.domain.Video;
+import com.stellive.fansite.domain.*;
 import com.stellive.fansite.dto.playlistitems.PlaylistItemsItem;
 import com.stellive.fansite.dto.playlistitems.PlaylistItemsList;
 import com.stellive.fansite.dto.playlistitems.PlaylistItemsSnippet;
