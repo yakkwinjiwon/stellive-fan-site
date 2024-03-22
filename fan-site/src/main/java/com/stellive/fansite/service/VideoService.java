@@ -1,10 +1,10 @@
 package com.stellive.fansite.service;
 
-import com.stellive.fansite.client.MusicClient;
+import com.stellive.fansite.client.PlaylistItemsClient;
 import com.stellive.fansite.client.VideoClient;
-import com.stellive.fansite.domain.YoutubeChannel;
-import com.stellive.fansite.domain.VideoType;
 import com.stellive.fansite.domain.Video;
+import com.stellive.fansite.domain.VideoType;
+import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.repository.Video.VideoRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,49 +19,90 @@ import java.util.List;
 @Slf4j
 public class VideoService {
 
+    private final PlaylistItemsClient playlistItemsClient;
     private final VideoClient videoClient;
-    private final MusicClient musicClient;
     private final VideoRepo videoRepo;
 
     public List<Video> findByChannelIdAndVideoType(Long id, VideoType videoType) {
+
         return videoRepo.findByChannelIdAndVideoType(id, videoType);
     }
 
-    public List<Video> updateAllVideos() {
+    public List<Video> updateVideos(Integer maxResults) {
+
+        log.info("Update Videos");
         List<Video> videos = new ArrayList<>();
+
         Arrays.stream(YoutubeChannel.values())
-                .forEach(stella ->{
-                    List<Video> updatedVideos = updateVideos(stella);
+                .forEach(youtubeChannel -> {
+                    List<Video> fetchedVideos = playlistItemsClient
+                            .getVieosFromPlaylist(getPlaylistFromId(youtubeChannel), maxResults);
+                    fetchedVideos = videoClient.setDuration(fetchedVideos);
+
+                    List<Video> determinedVideos = determineVideoType(youtubeChannel, fetchedVideos);
+                    List<Video> updatedVideos = videoRepo.save(determinedVideos);
+                    log.info("Updated Videos={}", updatedVideos);
+
                     videos.addAll(updatedVideos);
                 });
         return videos;
     }
-    public List<Video> updateVideos(YoutubeChannel stella) {
-        List<Video> videos = videoClient.getVideos(stella, VideoType.VIDEO, 2);
-        List<Video> replays = videoClient.getVideos(stella, VideoType.REPLAY, 2);
-        log.info("updateVideos={}", videos);
-        return videoRepo.save(videos);
+
+    private List<Video> determineVideoType(YoutubeChannel youtubeChannel,
+                                           List<Video> fetchedVideos) {
+
+        if (youtubeChannel.getId() % 10 == 2) {
+            fetchedVideos.forEach(video -> video.setVideoType(VideoType.REPLAY));
+            return fetchedVideos;
+        }
+
+        fetchedVideos.forEach(video -> {
+            if (video.getDuration() <= 60) {
+                video.setVideoType(VideoType.SHORTS);
+            } else {
+                video.setVideoType(VideoType.VIDEO);
+            }
+        });
+        return fetchedVideos;
     }
 
-    public List<Video> updateAllMusics() {
-        List<Video> musics = new ArrayList<>();
+    private String getPlaylistFromId(YoutubeChannel youtubeChannel) {
+
+        StringBuilder builder = new StringBuilder(youtubeChannel.getChannelId());
+        builder.setCharAt(1, 'U');
+        return builder.toString();
+    }
+
+    public List<Video> updateMusics(Integer maxResults) {
+
+        log.info("Update Musics");
+        List<Video> videos = new ArrayList<>();
+
         Arrays.stream(YoutubeChannel.values())
-                .forEach(stella ->{
-                    List<Video> updatedMusics = updateMusics(stella);
-                    musics.addAll(updatedMusics);
-                });
-        log.info("updateAllMusics={}", musics);
-        return musics;
+                .forEach(youtubeChannel ->
+                        updateMusics(youtubeChannel, maxResults));
+        return videos;
     }
 
-    private List<Video> updateMusics(YoutubeChannel stella) {
-        List<Video> musics = new ArrayList<>();
-        stella.getMusicPlaylistIds()
-                .forEach(PlaylistId -> {
-                    List<Video> fetchedMusics = musicClient.getMusics(stella, PlaylistId);
-                    musics.addAll(fetchedMusics);
-                });
-        log.info("updateMusics={}", musics);
-        return musics;
+    private List<Video> updateMusics(YoutubeChannel youtubeChannel,
+                                     Integer maxResults) {
+
+        List<Video> videos = new ArrayList<>();
+
+        List<String> musicPlaylistIds = youtubeChannel.getMusicPlaylistIds();
+        musicPlaylistIds.forEach(playlistId -> {
+            List<Video> fetchedVideos = playlistItemsClient
+                    .getVieosFromPlaylist(playlistId, maxResults);
+
+            fetchedVideos.forEach(video -> video.setVideoType(VideoType.MUSIC));
+            List<Video> determinedVideos = videoClient.setDuration(fetchedVideos);
+
+            List<Video> updatedVideos = videoRepo.save(determinedVideos);
+            log.info("Updated Musics={}", updatedVideos);
+
+            videos.addAll(updatedVideos);
+        });
+
+        return videos;
     }
 }

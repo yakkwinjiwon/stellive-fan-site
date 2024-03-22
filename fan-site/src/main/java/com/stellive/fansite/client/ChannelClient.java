@@ -33,51 +33,55 @@ public class ChannelClient {
     private final ApiUtils apiUtils;
 
     public Channel getChannel(YoutubeChannel youtubeChannel) {
+
         ResponseEntity<String> response = fetchChannel(youtubeChannel);
         try {
-            return parseChannel(youtubeChannel, response);
+            ChannelList channelList = parseChannel(response);
+            return buildChannel(youtubeChannel, channelList);
         } catch (JsonProcessingException | NullPointerException e) {
             throw new JsonParsingException("JSON parsing error", e);
         }
     }
 
-    private ResponseEntity<String> fetchChannel(YoutubeChannel stella) {
-        URI uri = getChannelUri(stella);
+    private ResponseEntity<String> fetchChannel(YoutubeChannel youtubeChannel) {
+
+        URI uri = getChannelUri(youtubeChannel);
         return restTemplate.getForEntity(uri, String.class);
     }
 
-    private URI getChannelUri(YoutubeChannel stella) {
+    private URI getChannelUri(YoutubeChannel youtubeChannel) {
+
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
                 .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
                 .queryParam(PARAM_CHANNEL_PART,
                         PART_SNIPPET + ", " +
                         PART_BRANDING_SETTINGS)
-                .queryParam(PARAM_CHANNEL_ID, stella.getChannelId())
+                .queryParam(PARAM_CHANNEL_ID, youtubeChannel.getChannelId())
                 .build().toUri();
     }
 
-    private Channel parseChannel(YoutubeChannel stella,
-                                 ResponseEntity<String> response)
+    private ChannelList parseChannel(ResponseEntity<String> response)
             throws JsonProcessingException {
+
         if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
             String result = response.getBody();
-            ChannelList channelList = objectMapper.readValue(result, ChannelList.class);
-            return buildChannel(stella, channelList);
+            return objectMapper.readValue(result, ChannelList.class);
         } else {
             log.error("YouTube API responded with status code: {}", response.getStatusCode());
-            return new Channel();
+            return new ChannelList();
         }
     }
 
-    private Channel buildChannel(YoutubeChannel stella,
+    private Channel buildChannel(YoutubeChannel youtubeChannel,
                                  ChannelList channelList) {
+
         ChannelItem item = channelList.getItems().getFirst();
         ChannelImage image = item.getBrandingSettings().getImage();
 
         return Channel.builder()
-                .id(stella.getId())
+                .id(youtubeChannel.getId())
                 .externalId(item.getId())
-                .videos(videoRepo.findByChannelId(stella.getId()))
+                .videos(videoRepo.findByChannelId(youtubeChannel.getId()))
                 .handle(item.getSnippet().getCustomUrl())
                 .thumbnailUrl(item.getSnippet().getThumbnails().getHigh().getUrl())
                 .bannerUrl((image != null) ? image.getBannerExternalUrl() : null)

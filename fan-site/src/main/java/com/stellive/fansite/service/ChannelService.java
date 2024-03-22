@@ -21,7 +21,10 @@ public class ChannelService {
     private final ChannelRepo channelRepo;
 
     public List<Channel> updateAll() {
+
+        log.info("Update all Channels");
         List<Channel> channels = new ArrayList<>();
+
         Arrays.stream(YoutubeChannel.values())
                 .forEach(stella -> {
                     Channel channel = update(stella);
@@ -31,8 +34,9 @@ public class ChannelService {
     }
 
     public Channel update(YoutubeChannel stella) {
+
         Channel channel = channelClient.getChannel(stella);
-        log.info("updateChannel={}", channel);
+        log.info("Updated Channel={}", channel);
         return channelRepo.save(channel);
     }
 

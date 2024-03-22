@@ -23,9 +23,18 @@ public class Video {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    private Long duration;
     private VideoType videoType;
     private String externalId;
     private String title;
     private String thumbnailUrl;
     private Instant publishTime;
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public void setVideoType(VideoType videoType) {
+        this.videoType = videoType;
+    }
 }

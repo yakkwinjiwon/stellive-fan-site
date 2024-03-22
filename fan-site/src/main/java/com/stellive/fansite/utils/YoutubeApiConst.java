@@ -8,6 +8,7 @@ public class YoutubeApiConst {
     public static final String URL_SEARCH = "https://www.googleapis.com/youtube/v3/search";
     public static final String URL_CHANNEL = "https://www.googleapis.com/youtube/v3/channels";
     public static final String URL_PLAYLIST_ITEMS = "https://www.googleapis.com/youtube/v3/playlistItems";
+    public static final String URL_VIDEO = "https://www.googleapis.com/youtube/v3/videos";
 
 
     public static final String PARAM_KEY = "key";
@@ -35,7 +36,16 @@ public class YoutubeApiConst {
     public static final String PARAM_PLAYLIST_ITEMS_MAX_RESULTS = "maxResults";
     public static final String PARAM_PLAYLIST_ITEMS_PAGE_TOKEN = "pageToken";
 
+    /**
+     * Video Parameter
+     */
+    public static final String PARAM_VIDEO_PART = "part";
+    public static final String PARAM_VIDEO_ID = "id";
+
+
+
     public static final String PART_SNIPPET = "snippet";
+    public static final String PART_CONTENT_DETAILS = "contentDetails";
     public static final String PART_BRANDING_SETTINGS = "brandingSettings";
 
     public static final String ORDER_DATE= "date";
@@ -44,6 +54,8 @@ public class YoutubeApiConst {
     public static final String TYPE_CHANNEL= "channel";
     public static final String TYPE_PLAYLIST= "playlist";
     public static final String TYPE_VIDEO= "video";
-    public static final Integer MAX_RESULTS = 2;
+    public static final Integer MAX_RESULTS_VIDEO = 1;
+    public static final Integer MAX_RESULTS_MUSIC = 1;
+    public static final Integer MAX_RESULTS_ALL = 50;
 
 }
