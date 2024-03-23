@@ -36,7 +36,7 @@ public class VideoService {
         Arrays.stream(YoutubeChannel.values())
                 .forEach(youtubeChannel -> {
                     List<Video> fetchedVideos = playlistItemsClient
-                            .getVieosFromPlaylist(getPlaylistFromId(youtubeChannel), maxResults);
+                            .getVideosFromPlaylistId(getPlaylistFromId(youtubeChannel), maxResults);
                     fetchedVideos = videoClient.setDuration(fetchedVideos);
 
                     List<Video> determinedVideos = determineVideoType(youtubeChannel, fetchedVideos);
@@ -92,7 +92,7 @@ public class VideoService {
         List<String> musicPlaylistIds = youtubeChannel.getMusicPlaylistIds();
         musicPlaylistIds.forEach(playlistId -> {
             List<Video> fetchedVideos = playlistItemsClient
-                    .getVieosFromPlaylist(playlistId, maxResults);
+                    .getVideosFromPlaylistId(playlistId, maxResults);
 
             fetchedVideos.forEach(video -> video.setVideoType(VideoType.MUSIC));
             List<Video> determinedVideos = videoClient.setDuration(fetchedVideos);

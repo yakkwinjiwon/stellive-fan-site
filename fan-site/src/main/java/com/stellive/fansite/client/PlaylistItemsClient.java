@@ -1,13 +1,9 @@
 package com.stellive.fansite.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.Video;
-import com.stellive.fansite.dto.playlistitem.PlaylistItemItem;
-import com.stellive.fansite.dto.playlistitem.PlaylistItemList;
-import com.stellive.fansite.dto.playlistitem.PlaylistItemSnippet;
-import com.stellive.fansite.exceptions.JsonParsingException;
+import com.stellive.fansite.dto.VideoResponse;
+import com.stellive.fansite.dto.playlistitem.*;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +17,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
@@ -31,45 +28,39 @@ public class PlaylistItemsClient {
 
     private final ChannelRepo channelRepo;
 
-    private final ApiUtils apiUtils;
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private final ApiUtils apiUtils;
 
-    public List<Video> getVieosFromPlaylist(String playlistId,
-                                            Integer maxResults) {
-
+    public List<Video> getVideosFromPlaylistId(String playlistId,
+                                               Integer maxResults) {
         List<Video> videos = new ArrayList<>();
-        ResponseEntity<String> response = null;
+        VideoResponse response = null;
         String nextPageToken = null;
 
         do {
-            response = fetchPlaylistItems(playlistId, nextPageToken, maxResults);
-            PlaylistItemList list = parseResponse(response);
-
-            List<Video> parsedVideos = getVideosFromList(list);
-            videos.addAll(parsedVideos);
-
-            nextPageToken = list.getNextPageToken();
-
-        } while (response.getBody().contains("nextPageToken") &&
-                maxResults.equals(MAX_RESULTS_ALL));
+            response = getVideosFromNextPageToken(playlistId, maxResults, nextPageToken);
+            videos.addAll(response.getVideos());
+            nextPageToken = response.getNextPageToken();
+        } while (nextPageToken != null && maxResults.equals(MAX_RESULTS_ALL));
 
         return videos;
     }
 
-    private PlaylistItemList parseResponse(ResponseEntity<String> response) {
-
-        try {
-            return objectMapper.readValue(response.getBody(), PlaylistItemList.class);
-        } catch (JsonProcessingException e) {
-            throw new JsonParsingException("JSON parsing error", e);
-        }
+    private VideoResponse getVideosFromNextPageToken(String playlistId,
+                                                     Integer maxResults,
+                                                     String nextPageToken) {
+        ResponseEntity<String> response = fetchPlaylistItem(playlistId, maxResults, nextPageToken);
+        PlaylistItemList list = apiUtils.parseResponse(response, PlaylistItemList.class);
+        return VideoResponse.builder()
+                .videos(buildVideos(list))
+                .nextPageToken(Optional.ofNullable(list)
+                        .map(PlaylistItemList::getNextPageToken)
+                        .orElse(null))
+                .build();
     }
 
-    public ResponseEntity<String> fetchPlaylistItems(String playlistId,
-                                                     String nextPageToken,
-                                                     Integer maxResults) {
-
+    private ResponseEntity<String> fetchPlaylistItem(String playlistId,
+                                                     Integer maxResults, String nextPageToken) {
         URI uri = getUri(playlistId, nextPageToken, maxResults);
         return restTemplate.getForEntity(uri, String.class);
     }
@@ -77,42 +68,61 @@ public class PlaylistItemsClient {
     private URI getUri(String playlistId,
                        String nextPageToken,
                        Integer maxResults) {
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEMS)
-                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
-                .queryParam(PARAM_PLAYLIST_ITEMS_PART, PART_SNIPPET)
-                .queryParam(PARAM_PLAYLIST_ITEMS_PLAYLIST_ID, playlistId)
-                .queryParam(PARAM_PLAYLIST_ITEMS_MAX_RESULTS, maxResults);
+        UriComponentsBuilder builder = getUriBuilder(playlistId, maxResults);
         if (nextPageToken != null) {
             builder = builder.queryParam(PARAM_PLAYLIST_ITEMS_PAGE_TOKEN, nextPageToken);
         }
         return builder.build().toUri();
     }
 
-    private List<Video> getVideosFromList(PlaylistItemList list) {
+    private UriComponentsBuilder getUriBuilder(String playlistId,
+                                               Integer maxResults) {
+        return UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEMS)
+                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
+                .queryParam(PARAM_PLAYLIST_ITEMS_PART, PART_SNIPPET)
+                .queryParam(PARAM_PLAYLIST_ITEMS_PLAYLIST_ID, playlistId)
+                .queryParam(PARAM_PLAYLIST_ITEMS_MAX_RESULTS, maxResults);
+    }
 
-        List<PlaylistItemItem> items = list.getItems();
+    private List<Video> buildVideos(PlaylistItemList list) {
         List<Video> videos = new ArrayList<>();
+        List<PlaylistItemItem> items = Optional.ofNullable(list)
+                .map(PlaylistItemList::getItems)
+                .orElse(new ArrayList<>());
+
         items.forEach(item -> {
-            PlaylistItemSnippet snippet = item.getSnippet();
+            PlaylistItemSnippet snippet = Optional.ofNullable(item)
+                    .map(PlaylistItemItem::getSnippet)
+                    .orElse(null);
             //사용할 수 없는 동영상 제외
-            if (snippet.getThumbnails().getHigh() != null) {
-                Video video = buildVideo(snippet);
-                videos.add(video);
+            if (Optional.ofNullable(snippet)
+                    .map(PlaylistItemSnippet::getThumbnails)
+                    .map(PlaylistItemThumbnails::getHigh).isPresent()) {
+                videos.add(buildVideo(snippet));
             }
         });
         return videos;
     }
 
     private Video buildVideo(PlaylistItemSnippet snippet) {
-
         return Video.builder()
                 .channel(channelRepo.findByExternalId(snippet.getVideoOwnerChannelId())
                         .orElseGet(Channel::new))
-                .externalId(snippet.getResourceId().getVideoId())
-                .title(snippet.getTitle())
-                .thumbnailUrl(snippet.getThumbnails().getHigh().getUrl())
-                .publishTime(Instant.parse(snippet.getPublishedAt()))
+                .externalId(Optional.of(snippet)
+                        .map(PlaylistItemSnippet::getResourceId)
+                        .map(PlaylistItemResourceId::getVideoId)
+                        .orElse(null))
+                .title(Optional.of(snippet)
+                        .map(PlaylistItemSnippet::getTitle)
+                        .orElse(null))
+                .thumbnailUrl(Optional.of(snippet)
+                        .map(PlaylistItemSnippet::getThumbnails)
+                        .map(PlaylistItemThumbnails::getHigh)
+                        .map(PlaylistItemThumbnail::getUrl)
+                        .orElse(null))
+                .publishTime(Instant.parse(Optional.of(snippet)
+                        .map(PlaylistItemSnippet::getPublishedAt)
+                        .orElse(null)))
                 .build();
     }
 
