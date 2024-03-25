@@ -15,7 +15,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Notice {
+public class News {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

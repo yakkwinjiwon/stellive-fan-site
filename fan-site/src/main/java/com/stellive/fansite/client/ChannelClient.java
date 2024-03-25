@@ -28,10 +28,10 @@ import static com.stellive.fansite.utils.YoutubeApiConst.*;
 @Slf4j
 public class ChannelClient {
 
-    private final VideoRepo videoRepo;
-
     private final RestTemplate restTemplate;
     private final ApiUtils apiUtils;
+
+    private final VideoRepo videoRepo;
 
     @Retryable(value = {RestClientException.class, ResponseParsingException.class,
             ApiResponseException.class},
@@ -50,10 +50,10 @@ public class ChannelClient {
     private URI getChannelUri(YoutubeChannel youtubeChannel) {
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
                 .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
-                .queryParam(PARAM_CHANNEL_PART,
+                .queryParam(PARAM_PART,
                         PART_SNIPPET + ", " +
                                 PART_BRANDING_SETTINGS)
-                .queryParam(PARAM_CHANNEL_ID, youtubeChannel.getChannelId())
+                .queryParam(PARAM_ID, youtubeChannel.getChannelId())
                 .build().toUri();
     }
 
@@ -70,18 +70,18 @@ public class ChannelClient {
                 .handle(Optional.ofNullable(item)
                         .map(ChannelItem::getSnippet)
                         .map(ChannelSnippet::getCustomUrl)
-                        .orElse(null))
+                        .orElse(""))
                 .thumbnailUrl(Optional.ofNullable(item)
                         .map(ChannelItem::getSnippet)
                         .map(ChannelSnippet::getThumbnails)
                         .map(ChannelThumbnails::getHigh)
                         .map(ChannelThumbnail::getUrl)
-                        .orElse(null))
+                        .orElse(""))
                 .bannerUrl(Optional.ofNullable(item)
                         .map(ChannelItem::getBrandingSettings)
                         .map(ChannelBrandingSettings::getImage)
                         .map(ChannelImage::getBannerExternalUrl)
-                        .orElse(null))
+                        .orElse(""))
                 .build();
     }
 

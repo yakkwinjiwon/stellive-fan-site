@@ -18,33 +18,25 @@ import java.util.List;
 public class ChannelService {
 
     private final ChannelClient channelClient;
+
     private final ChannelRepo channelRepo;
 
     public List<Channel> updateAll() {
-
         log.info("Update all Channels");
         List<Channel> channels = new ArrayList<>();
 
         Arrays.stream(YoutubeChannel.values())
-                .forEach(stella -> {
-                    Channel channel = update(stella);
-                    channels.add(channel);
+                .forEach(youtubeChannel -> {
+                    Channel fetchedChannel = channelClient.getChannel(youtubeChannel);
+                    Channel updatedChannel = updateChannel(fetchedChannel);
+                    log.info("Updated Channel={}", updatedChannel);
+                    channels.add(updatedChannel);
                 });
         return channels;
     }
 
-    public Channel update(YoutubeChannel stella) {
-
-        Channel channel = channelClient.getChannel(stella);
-        log.info("Updated Channel={}", channel);
+    public Channel updateChannel(Channel channel) {
         return channelRepo.save(channel);
     }
 
-    public Channel findById(Long id) {
-        return channelRepo.findById(id).orElseGet(Channel::new);
-    }
-
-    public List<Channel> findAll() {
-        return channelRepo.findAll();
-    }
 }

@@ -22,18 +22,22 @@ public class YoutubeScheduling {
      *  데이터 전부 갱신
      */
     public void updateAll() {
-        log.info("Update All");
+        log.info("Update all");
         channelService.updateAll();
         videoService.updateVideos(MAX_RESULTS_ALL);
         videoService.updateMusics(MAX_RESULTS_ALL);
-
     }
 
     @Scheduled(cron = "* */10 * * * ?")
     public void updateRecent() {
-        log.info("Update Recent");
-        channelService.updateAll();
+        log.info("Update recent");
         videoService.updateVideos(MAX_RESULTS_VIDEO);
         videoService.updateMusics(MAX_RESULTS_MUSIC);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void updateChannel() {
+        log.info("Update channel");
+        channelService.updateAll();
     }
 }

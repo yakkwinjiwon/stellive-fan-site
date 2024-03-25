@@ -4,12 +4,17 @@ import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.dto.VideoResponse;
 import com.stellive.fansite.dto.playlistitem.*;
+import com.stellive.fansite.exceptions.ApiResponseException;
+import com.stellive.fansite.exceptions.ResponseParsingException;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,32 +26,20 @@ import java.util.Optional;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
-@Component
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class PlaylistItemsClient {
-
-    private final ChannelRepo channelRepo;
+public class PlaylistItemRetryClient {
 
     private final RestTemplate restTemplate;
     private final ApiUtils apiUtils;
 
-    public List<Video> getVideosFromPlaylistId(String playlistId,
-                                               Integer maxResults) {
-        List<Video> videos = new ArrayList<>();
-        VideoResponse response = null;
-        String nextPageToken = null;
+    private final ChannelRepo channelRepo;
 
-        do {
-            response = getVideosFromNextPageToken(playlistId, maxResults, nextPageToken);
-            videos.addAll(response.getVideos());
-            nextPageToken = response.getNextPageToken();
-        } while (nextPageToken != null && maxResults.equals(MAX_RESULTS_ALL));
-
-        return videos;
-    }
-
-    private VideoResponse getVideosFromNextPageToken(String playlistId,
+    @Retryable(value = {RestClientException.class, ResponseParsingException.class,
+            ApiResponseException.class},
+            maxAttempts = 1, backoff = @Backoff(delay = 1000))
+    public VideoResponse getVideosFromNextPageToken(String playlistId,
                                                      Integer maxResults,
                                                      String nextPageToken) {
         ResponseEntity<String> response = fetchPlaylistItem(playlistId, maxResults, nextPageToken);
@@ -60,28 +53,24 @@ public class PlaylistItemsClient {
     }
 
     private ResponseEntity<String> fetchPlaylistItem(String playlistId,
-                                                     Integer maxResults, String nextPageToken) {
-        URI uri = getUri(playlistId, nextPageToken, maxResults);
+                                                     Integer maxResults,
+                                                     String nextPageToken) {
+        URI uri = getPlaylistItemUri(playlistId, maxResults, nextPageToken);
         return restTemplate.getForEntity(uri, String.class);
     }
 
-    private URI getUri(String playlistId,
-                       String nextPageToken,
-                       Integer maxResults) {
-        UriComponentsBuilder builder = getUriBuilder(playlistId, maxResults);
+    private URI getPlaylistItemUri(String playlistId,
+                                   Integer maxResults,
+                                   String nextPageToken) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEMS)
+                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
+                .queryParam(PARAM_PART, PART_SNIPPET)
+                .queryParam(PARAM_PLAYLIST_ID, playlistId)
+                .queryParam(PARAM_MAX_RESULTS, maxResults);
         if (nextPageToken != null) {
-            builder = builder.queryParam(PARAM_PLAYLIST_ITEMS_PAGE_TOKEN, nextPageToken);
+            builder = builder.queryParam(PARAM_PAGE_TOKEN, nextPageToken);
         }
         return builder.build().toUri();
-    }
-
-    private UriComponentsBuilder getUriBuilder(String playlistId,
-                                               Integer maxResults) {
-        return UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEMS)
-                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
-                .queryParam(PARAM_PLAYLIST_ITEMS_PART, PART_SNIPPET)
-                .queryParam(PARAM_PLAYLIST_ITEMS_PLAYLIST_ID, playlistId)
-                .queryParam(PARAM_PLAYLIST_ITEMS_MAX_RESULTS, maxResults);
     }
 
     private List<Video> buildVideos(PlaylistItemList list) {
@@ -94,10 +83,11 @@ public class PlaylistItemsClient {
             PlaylistItemSnippet snippet = Optional.ofNullable(item)
                     .map(PlaylistItemItem::getSnippet)
                     .orElse(null);
-            //사용할 수 없는 동영상 제외
+
             if (Optional.ofNullable(snippet)
                     .map(PlaylistItemSnippet::getThumbnails)
-                    .map(PlaylistItemThumbnails::getHigh).isPresent()) {
+                    .map(PlaylistItemThumbnails::getHigh)
+                    .isPresent()) {
                 videos.add(buildVideo(snippet));
             }
         });
@@ -111,18 +101,18 @@ public class PlaylistItemsClient {
                 .externalId(Optional.of(snippet)
                         .map(PlaylistItemSnippet::getResourceId)
                         .map(PlaylistItemResourceId::getVideoId)
-                        .orElse(null))
+                        .orElse(""))
                 .title(Optional.of(snippet)
                         .map(PlaylistItemSnippet::getTitle)
-                        .orElse(null))
+                        .orElse(""))
                 .thumbnailUrl(Optional.of(snippet)
                         .map(PlaylistItemSnippet::getThumbnails)
                         .map(PlaylistItemThumbnails::getHigh)
                         .map(PlaylistItemThumbnail::getUrl)
-                        .orElse(null))
+                        .orElse(""))
                 .publishTime(Instant.parse(Optional.of(snippet)
                         .map(PlaylistItemSnippet::getPublishedAt)
-                        .orElse(null)))
+                        .orElse("1970-01-01T00:00:00Z")))
                 .build();
     }
 

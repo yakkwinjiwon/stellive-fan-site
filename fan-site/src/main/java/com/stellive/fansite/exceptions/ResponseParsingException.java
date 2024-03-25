@@ -6,7 +6,11 @@ public class ResponseParsingException extends RuntimeException{
             super(message, cause);
         }
 
-        public ResponseParsingException(Throwable cause) {
+    public ResponseParsingException(String message) {
+        super(message);
+    }
+
+    public ResponseParsingException(Throwable cause) {
             super(cause);
         }
 }

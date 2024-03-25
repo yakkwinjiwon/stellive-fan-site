@@ -59,4 +59,8 @@ public enum YoutubeChannel {
     private final String channelId;
     private final List<String> musicPlaylistIds;
 
+    public static Boolean isReplay(YoutubeChannel youtubeChannel) {
+        return youtubeChannel.getId() % 10 == 2;
+    }
+
 }

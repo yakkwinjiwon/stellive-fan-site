@@ -1,6 +1,6 @@
-package com.stellive.fansite.repository.Notice;
+package com.stellive.fansite.repository.News;
 
-import com.stellive.fansite.domain.Notice;
+import com.stellive.fansite.domain.News;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -10,17 +10,17 @@ import java.util.List;
 @Repository
 @Slf4j
 @RequiredArgsConstructor
-public class NoticeRepoImpl implements NoticeRepo {
+public class NewsRepoImpl implements NewsRepo {
 
-    private final NoticeDataRepo noticeDataRepo;
+    private final NewsDataRepo noticeDataRepo;
 
     @Override
-    public List<Notice> save(List<Notice> notices) {
+    public List<News> save(List<News> notices) {
         return noticeDataRepo.saveAll(notices);
     }
 
     @Override
-    public List<Notice> findAll() {
+    public List<News> findAll() {
         return noticeDataRepo.findAll();
     }
 }

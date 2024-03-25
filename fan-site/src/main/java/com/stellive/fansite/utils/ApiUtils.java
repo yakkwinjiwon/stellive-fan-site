@@ -11,17 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Getter
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class ApiUtils {
 
     private final ObjectMapper objectMapper;
 
-    /**
-     * Youtube token
-     */
     @Value("${youtube-api-key}")
     private String youtubeApiKey;
 
@@ -30,12 +27,14 @@ public class ApiUtils {
             try {
                 return objectMapper.readValue(response.getBody(), clazz);
             } catch (JsonProcessingException e) {
+                log.error("Failed to parse response body: {}", response.getBody());
                 throw new ResponseParsingException(e);
             }
         } else {
-            log.error("YouTube API responded with status code: {} and body: {}",
+            log.error("Unsuccessful API response: status code: {}, body: {}",
                     response.getStatusCode(), response.getBody());
             throw new ApiResponseException("Unsuccessful API response");
         }
     }
+
 }
