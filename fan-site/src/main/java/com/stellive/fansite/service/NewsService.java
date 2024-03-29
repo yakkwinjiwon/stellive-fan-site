@@ -19,8 +19,9 @@ public class NewsService {
     private final NewsRepo noticeRepo;
 
     public List<News> updateNotices() {
+        log.info("update Notices");
         List<News> notices = webScraper.getNews();
-        log.info("updateNotices={}", notices);
+        log.info("updated Notices={}", notices);
         return noticeRepo.save(notices);
     }
 

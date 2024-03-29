@@ -4,11 +4,15 @@ import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.dto.video.VideoContentDetails;
 import com.stellive.fansite.dto.video.VideoItem;
 import com.stellive.fansite.dto.video.VideoList;
+import com.stellive.fansite.exceptions.ApiResponseException;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,12 +31,10 @@ public class VideoClient {
     private final RestTemplate restTemplate;
     private final ApiUtils apiUtils;
 
-    public List<Video> setDuration(List<Video> videos) {
-        videos.forEach(this::setDuration);
-        return videos;
-    }
 
-    private Video setDuration(Video video) {
+    @Retryable(value = {RestClientException.class, ApiResponseException.class},
+            maxAttempts = MAX_ATTEMPTS, backoff = @Backoff(delay = DELAY))
+    public Video setDuration(Video video) {
         ResponseEntity<String> response = fetchVideo(video);
         VideoList list = apiUtils.parseResponse(response, VideoList.class);
         return setDuration(video, list);

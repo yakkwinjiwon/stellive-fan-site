@@ -49,4 +49,10 @@ public class YoutubeApiConst {
     public static final Integer MAX_RESULTS_MUSIC = 1;
     public static final Integer MAX_RESULTS_ALL = 50;
 
+    /**
+     * Retryable value
+     */
+    public static final int MAX_ATTEMPTS = 2;
+    public static final int DELAY = 1000;
+
 }

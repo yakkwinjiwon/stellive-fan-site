@@ -6,18 +6,20 @@ import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.domain.VideoType;
 import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.repository.Video.VideoRepo;
+import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
+@Service
 public class VideoService {
+
+    private final ApiUtils apiUtils;
 
     private final PlaylistItemClient playlistItemsClient;
     private final VideoClient videoClient;
@@ -28,18 +30,17 @@ public class VideoService {
         log.info("Update Videos");
         List<Video> videos = new ArrayList<>();
 
-        Arrays.stream(YoutubeChannel.values())
-                .forEach(youtubeChannel -> {
-                    List<Video> fetchedVideos = playlistItemsClient
-                            .getVideosFromPlaylistId(getAllVideoPlaylistId(youtubeChannel), maxResults);
-                    fetchedVideos = videoClient.setDuration(fetchedVideos);
-                    List<Video> determinedVideos = determineVideoType(youtubeChannel, fetchedVideos);
+        apiUtils.executeForEachChannel(youtubeChannel -> {
+            List<Video> fetchedVideos = playlistItemsClient
+                    .getVideosFromPlaylistId(getAllVideoPlaylistId(youtubeChannel), maxResults);
+            fetchedVideos.forEach(videoClient::setDuration);
+            List<Video> determinedVideos = determineVideoType(youtubeChannel, fetchedVideos);
 
-                    List<Video> updatedVideos = updateVideos(determinedVideos);
-                    log.info("Updated Videos={}", updatedVideos);
+            List<Video> updatedVideos = updateVideos(determinedVideos);
+            log.info("Updated Videos={}", updatedVideos);
 
-                    videos.addAll(updatedVideos);
-                });
+            videos.addAll(updatedVideos);
+        });
         return videos;
     }
 
@@ -49,7 +50,7 @@ public class VideoService {
 
     private List<Video> determineVideoType(YoutubeChannel youtubeChannel,
                                            List<Video> fetchedVideos) {
-        if (YoutubeChannel.isReplay(youtubeChannel)) {
+        if (youtubeChannel.isReplay()) {
             fetchedVideos.forEach(video -> video.setVideoType(VideoType.REPLAY));
             return fetchedVideos;
         }
@@ -64,6 +65,8 @@ public class VideoService {
         return fetchedVideos;
     }
 
+    // 유튜브 id를 이용하여 전체 영상 플레이리스트 id를 생성.
+    // UCxxx (id) -> UUxxx (playlistId)
     private String getAllVideoPlaylistId(YoutubeChannel youtubeChannel) {
         StringBuilder builder = new StringBuilder(youtubeChannel.getChannelId());
         builder.setCharAt(1, 'U');
@@ -74,9 +77,9 @@ public class VideoService {
         log.info("Update Musics");
         List<Video> videos = new ArrayList<>();
 
-        Arrays.stream(YoutubeChannel.values())
-                .forEach(youtubeChannel ->
-                        updateMusics(youtubeChannel, maxResults));
+        apiUtils.executeForEachChannel(youtubeChannel -> {
+            updateMusics(youtubeChannel, maxResults);
+        });
         return videos;
     }
 
@@ -86,16 +89,21 @@ public class VideoService {
 
         youtubeChannel.getMusicPlaylistIds()
                 .forEach(playlistId -> {
-                    List<Video> fetchedVideos = playlistItemsClient
-                            .getVideosFromPlaylistId(playlistId, maxResults);
+                    apiUtils.executeWithHandling(() -> {
+                        List<Video> fetchedVideos = playlistItemsClient
+                                .getVideosFromPlaylistId(playlistId, maxResults);
 
-                    fetchedVideos.forEach(video -> video.setVideoType(VideoType.MUSIC));
-                    List<Video> determinedVideos = videoClient.setDuration(fetchedVideos);
+                        fetchedVideos.forEach(video -> {
+                            video.setVideoType(VideoType.MUSIC);
+                            videoClient.setDuration(video);
+                        });
 
-                    List<Video> updatedVideos = updateVideos(determinedVideos);
-                    log.info("Updated Musics={}", updatedVideos);
+                        List<Video> updatedVideos = updateVideos(fetchedVideos);
+                        log.info("Updated Musics={}", updatedVideos);
 
-                    videos.addAll(updatedVideos);
+                        videos.addAll(updatedVideos);
+                        return null;
+                    });
                 });
 
         return videos;

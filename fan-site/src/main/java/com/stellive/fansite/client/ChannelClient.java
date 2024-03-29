@@ -4,7 +4,7 @@ import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.dto.channel.*;
 import com.stellive.fansite.exceptions.ApiResponseException;
-import com.stellive.fansite.exceptions.ResponseParsingException;
+import com.stellive.fansite.exceptions.EmptyItemException;
 import com.stellive.fansite.repository.Video.VideoRepo;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +33,8 @@ public class ChannelClient {
 
     private final VideoRepo videoRepo;
 
-    @Retryable(value = {RestClientException.class, ResponseParsingException.class,
-            ApiResponseException.class},
-            maxAttempts = 1, backoff = @Backoff(delay = 1000))
+    @Retryable(value = {RestClientException.class, ApiResponseException.class},
+            maxAttempts = MAX_ATTEMPTS, backoff = @Backoff(delay = DELAY))
     public Channel getChannel(YoutubeChannel youtubeChannel) {
         ResponseEntity<String> response = fetchChannel(youtubeChannel);
         ChannelList list = apiUtils.parseResponse(response, ChannelList.class);
@@ -57,11 +56,13 @@ public class ChannelClient {
                 .build().toUri();
     }
 
-    private Channel buildChannel(ChannelList list, YoutubeChannel youtubeChannel) {
+    private Channel buildChannel(ChannelList list,
+                                 YoutubeChannel youtubeChannel) {
         ChannelItem item = Optional.ofNullable(list)
                 .map(ChannelList::getItems)
                 .map(List::getFirst)
-                .orElse(null);
+                .orElseThrow(() -> new EmptyItemException("Channel item not found, Id=" +
+                        youtubeChannel.getChannelId()));
 
         return Channel.builder()
                 .id(youtubeChannel.getId())

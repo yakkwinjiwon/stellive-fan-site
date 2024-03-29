@@ -1,11 +1,9 @@
 package com.stellive.fansite.client;
 
-import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.dto.VideoResponse;
 import com.stellive.fansite.dto.playlistitem.*;
 import com.stellive.fansite.exceptions.ApiResponseException;
-import com.stellive.fansite.exceptions.ResponseParsingException;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
 import com.stellive.fansite.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +24,9 @@ import java.util.Optional;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PlaylistItemRetryClient {
 
     private final RestTemplate restTemplate;
@@ -36,9 +34,8 @@ public class PlaylistItemRetryClient {
 
     private final ChannelRepo channelRepo;
 
-    @Retryable(value = {RestClientException.class, ResponseParsingException.class,
-            ApiResponseException.class},
-            maxAttempts = 1, backoff = @Backoff(delay = 1000))
+    @Retryable(value = {RestClientException.class, ApiResponseException.class},
+            maxAttempts = MAX_ATTEMPTS, backoff = @Backoff(delay = DELAY))
     public VideoResponse getVideosFromNextPageToken(String playlistId,
                                                      Integer maxResults,
                                                      String nextPageToken) {
@@ -84,11 +81,13 @@ public class PlaylistItemRetryClient {
                     .map(PlaylistItemItem::getSnippet)
                     .orElse(null);
 
+            // 볼 수 없는 영상은 썸네일이 없음
             if (Optional.ofNullable(snippet)
                     .map(PlaylistItemSnippet::getThumbnails)
                     .map(PlaylistItemThumbnails::getHigh)
                     .isPresent()) {
-                videos.add(buildVideo(snippet));
+                Video video = buildVideo(snippet);
+                videos.add(video);
             }
         });
         return videos;
@@ -97,7 +96,7 @@ public class PlaylistItemRetryClient {
     private Video buildVideo(PlaylistItemSnippet snippet) {
         return Video.builder()
                 .channel(channelRepo.findByExternalId(snippet.getVideoOwnerChannelId())
-                        .orElseGet(Channel::new))
+                        .orElse(null))
                 .externalId(Optional.of(snippet)
                         .map(PlaylistItemSnippet::getResourceId)
                         .map(PlaylistItemResourceId::getVideoId)
