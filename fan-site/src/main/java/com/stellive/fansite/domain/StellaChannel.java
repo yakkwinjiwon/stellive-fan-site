@@ -59,6 +59,7 @@ public enum StellaChannel implements YoutubeChannel{
     private final String channelId;
     private final List<String> musicPlaylistIds;
 
+    @Override
     public Boolean isReplay() {
         return id % 10 == 2;
     }

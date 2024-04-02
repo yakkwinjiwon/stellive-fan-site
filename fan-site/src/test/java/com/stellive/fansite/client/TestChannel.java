@@ -24,4 +24,9 @@ public enum TestChannel implements YoutubeChannel {
     private final Long id;
     private final String channelId;
     private final List<String> musicPlaylistIds;
+
+    @Override
+    public Boolean isReplay() {
+        return id % 10 == 2;
+    }
 }
