@@ -6,20 +6,23 @@ import lombok.Getter;
 
 import java.util.List;
 
+import static com.stellive.fansite.utils.TestConst.*;
+
 @Getter
 @AllArgsConstructor
 public enum TestChannel implements YoutubeChannel {
 
-    OK(1L, "UC7_uO3Vsk323nA3LeQX0_sw",
-            List.of("PUsF-WIxstzZmzk70V2aj1e6NawmmquvdR",
-                    "UL7_uO3Vsk323nA3LeQX0_sw")),
+    VALID(1L, CHANNEL_ID_VALID,
+            List.of(PLAYLIST_ID_VALID,
+                    PLAYLIST_ID_VALID)),
 
-    INVALID_CHANNEL_ID(2L, "Invalid Channel Id",
-            List.of("PUsF-WIxstzZmzk70V2aj1e6NawmmquvdR",
-                    "UL7_uO3Vsk323nA3LeQX0_sw")),
+    INVALID_BY_CHANNEL_ID(2L, CHANNEL_ID_INVALID,
+            List.of(PLAYLIST_ID_VALID,
+                    PLAYLIST_ID_VALID)),
 
-    INVALID_PLAYLIST_IDS(3L, "UC7_uO3Vsk323nA3LeQX0_sw",
-            List.of("Invalid Playlist Id"));
+    INVALID_BY_PLAYLIST_IDS(3L, CHANNEL_ID_VALID,
+            List.of(PLAYLIST_ID_INVALID,
+                    PLAYLIST_ID_INVALID));
 
     private final Long id;
     private final String channelId;

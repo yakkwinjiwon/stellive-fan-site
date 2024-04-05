@@ -1,6 +1,5 @@
 package com.stellive.fansite.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stellive.fansite.domain.StellaChannel;
 import com.stellive.fansite.domain.YoutubeChannel;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
@@ -29,20 +27,6 @@ public class ApiUtils {
 
     @Value("${youtube-api-key}")
     private String youtubeApiKey;
-
-    public <T> T parseResponse(ResponseEntity<String> response, Class<T> clazz) {
-        if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
-            try {
-                return objectMapper.readValue(response.getBody(), clazz);
-            } catch (JsonProcessingException e) {
-                log.error("Failed to parse response body: {}", response.getBody());
-                throw new ResponseParsingException(e);
-            }
-        } else {
-            log.error("Unsuccessful API response: status code: {}, body: {}", response.getStatusCode(), response.getBody());
-            throw new ApiResponseException("Unsuccessful API response");
-        }
-    }
 
     // StellaChannel의 각 값에 대해 주어진 작업을 실행하는 메서드
     public void executeForEachChannel(Consumer<YoutubeChannel> channelOperation) {

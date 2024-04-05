@@ -2,7 +2,17 @@ package com.stellive.fansite.utils;
 
 public class TestConst {
 
-    public static final String CHANNEL_JSON = "{\n" +
+    public static final String OK = "ok";
+    public static final String FAIL = "fail";
+
+    public static final String CHANNEL_ID_VALID = "UC7_uO3Vsk323nA3LeQX0_sw";
+    public static final String CHANNEL_ID_INVALID = "invalid channel id";
+    public static final String PLAYLIST_ID_VALID = "PLsF-WIxstzZmzk70V2aj1e6NawmmquvdR";
+    public static final String PLAYLIST_ID_INVALID = "invalid playlist id";
+    public static final String VIDEO_EXTERNAL_ID_VALID = "PQufcfQtvLg";
+    public static final String VIDEO_EXTERNAL_ID_INVALID = "invalid video external id";
+
+    public static final String CHANNEL_RESPONSE_VALID = "{\n" +
             "  \"kind\": \"youtube#channelListResponse\",\n" +
             "  \"etag\": \"Yf_Fotyi8_k6F3tIzfLKjDaw42k\",\n" +
             "  \"pageInfo\": {\n" +
@@ -44,6 +54,7 @@ public class TestConst {
             "    }\n" +
             "  ]\n" +
             "}\n";
+    public static final String CHANNEL_RESPONSE_INVALID = "invalid channel json";
 
-    public static final String CHANNEL_ID = "UC7_uO3Vsk323nA3LeQX0_sw";
+
 }

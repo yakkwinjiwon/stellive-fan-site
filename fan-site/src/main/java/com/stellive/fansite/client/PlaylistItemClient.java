@@ -16,14 +16,14 @@ public class PlaylistItemClient {
 
     private final PlaylistItemRetryClient retryClient;
 
-    public List<Video> getVideosFromPlaylistId(String playlistId,
-                                               Integer maxResults) {
+    public List<Video> fetchVideos(String playlistId,
+                                   Integer maxResults) {
         List<Video> videos = new ArrayList<>();
         VideoResponse response = null;
         String nextPageToken = null;
 
         do {
-            response = retryClient.getVideosFromNextPageToken(playlistId, maxResults, nextPageToken);
+            response = retryClient.fetchVideosWithNextPageToken(playlistId, maxResults, nextPageToken);
             videos.addAll(response.getVideos());
             nextPageToken = response.getNextPageToken();
         } while (nextPageToken != null && maxResults.equals(MAX_RESULTS_ALL));

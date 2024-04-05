@@ -32,7 +32,7 @@ public class VideoService {
 
         apiUtils.executeForEachChannel(youtubeChannel -> {
             List<Video> fetchedVideos = playlistItemsClient
-                    .getVideosFromPlaylistId(getAllVideoPlaylistId(youtubeChannel), maxResults);
+                    .fetchVideos(getAllVideoPlaylistId(youtubeChannel), maxResults);
             fetchedVideos.forEach(videoClient::setDuration);
             List<Video> determinedVideos = determineVideoType(youtubeChannel, fetchedVideos);
 
@@ -91,7 +91,7 @@ public class VideoService {
                 .forEach(playlistId -> {
                     apiUtils.executeWithHandling(() -> {
                         List<Video> fetchedVideos = playlistItemsClient
-                                .getVideosFromPlaylistId(playlistId, maxResults);
+                                .fetchVideos(playlistId, maxResults);
 
                         fetchedVideos.forEach(video -> {
                             video.setVideoType(VideoType.MUSIC);

@@ -27,7 +27,7 @@ public class ChannelService {
         List<Channel> channels = new ArrayList<>();
 
         apiUtils.executeForEachChannel(youtubeChannel -> {
-            Channel fetchedChannel = channelClient.getChannel(youtubeChannel);
+            Channel fetchedChannel = channelClient.fetchChannel(youtubeChannel);
             Channel updatedChannel = updateChannel(fetchedChannel);
 
             log.info("Updated Channel={}", updatedChannel);
