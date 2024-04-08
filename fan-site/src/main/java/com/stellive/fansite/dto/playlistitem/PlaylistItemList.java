@@ -2,11 +2,14 @@ package com.stellive.fansite.dto.playlistitem;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@NoArgsConstructor
 public class PlaylistItemList {
 
     private String nextPageToken;

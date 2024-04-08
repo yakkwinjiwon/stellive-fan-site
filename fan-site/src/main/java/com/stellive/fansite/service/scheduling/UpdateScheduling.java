@@ -1,11 +1,7 @@
-package com.stellive.fansite.scheduling;
+package com.stellive.fansite.service.scheduling;
 
-import com.stellive.fansite.service.ChannelService;
-import com.stellive.fansite.service.NewsService;
-import com.stellive.fansite.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
@@ -15,8 +11,8 @@ import static com.stellive.fansite.utils.YoutubeApiConst.*;
 @Slf4j
 public class UpdateScheduling {
 
-    private final ChannelService channelService;
-    private final VideoService videoService;
+    private final ChannelScheduler channelService;
+    private final VideoScheduler videoService;
     private final NewsService newsService;
 
 
@@ -31,7 +27,7 @@ public class UpdateScheduling {
         newsService.updateNotices();
     }
 
-    @Scheduled(cron = "*/10 * * * * ?")
+//    @Scheduled(cron = "*/10 * * * * ?")
 //    @Scheduled(cron = "* */10 * * * ?")
     public void updateRecent() {
         log.info("Update recent");
@@ -41,7 +37,7 @@ public class UpdateScheduling {
         newsService.updateNotices();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0 0 0 * * ?")
     public void updateChannel() {
         log.info("Update channel");
         channelService.updateChannels();

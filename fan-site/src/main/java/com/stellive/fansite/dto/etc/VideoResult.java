@@ -1,4 +1,4 @@
-package com.stellive.fansite.dto;
+package com.stellive.fansite.dto.etc;
 
 import com.stellive.fansite.domain.Video;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class VideoResponse {
+public class VideoResult {
 
     List<Video> videos;
     String nextPageToken;

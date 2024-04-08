@@ -1,5 +1,6 @@
 package com.stellive.fansite.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stellive.fansite.domain.StellaChannel;
 import com.stellive.fansite.domain.YoutubeChannel;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
@@ -17,13 +19,10 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Slf4j
-@Getter
 @Component
-@RequiredArgsConstructor
+@Getter
+@Slf4j
 public class ApiUtils {
-
-    private final ObjectMapper objectMapper;
 
     @Value("${youtube-api-key}")
     private String youtubeApiKey;
@@ -54,6 +53,5 @@ public class ApiUtils {
             log.error("Unexpected error", e);
         }
     }
-
 
 }

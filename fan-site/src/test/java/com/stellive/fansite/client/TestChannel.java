@@ -20,6 +20,7 @@ public enum TestChannel implements YoutubeChannel {
             List.of(PLAYLIST_ID_VALID,
                     PLAYLIST_ID_VALID)),
 
+
     INVALID_BY_PLAYLIST_IDS(3L, CHANNEL_ID_VALID,
             List.of(PLAYLIST_ID_INVALID,
                     PLAYLIST_ID_INVALID));

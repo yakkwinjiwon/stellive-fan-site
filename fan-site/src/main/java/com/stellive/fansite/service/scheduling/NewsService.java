@@ -1,4 +1,4 @@
-package com.stellive.fansite.service;
+package com.stellive.fansite.service.scheduling;
 
 import com.stellive.fansite.domain.News;
 import com.stellive.fansite.external.NewsScraper;
@@ -10,17 +10,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class NewsService {
 
-    private final NewsScraper webScraper;
+    private final NewsScraper newsScraper;
 
     private final NewsRepo noticeRepo;
 
     public List<News> updateNotices() {
         log.info("update Notices");
-        List<News> notices = webScraper.getNews();
+        List<News> notices = newsScraper.getNews();
         log.info("updated Notices={}", notices);
         return noticeRepo.save(notices);
     }

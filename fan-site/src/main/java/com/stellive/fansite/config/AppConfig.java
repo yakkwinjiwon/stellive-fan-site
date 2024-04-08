@@ -13,11 +13,4 @@ public class AppConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return mapper;
-    }
 }

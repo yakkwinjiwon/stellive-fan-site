@@ -1,7 +1,7 @@
 package com.stellive.fansite.controller;
 
-import com.stellive.fansite.service.ChannelService;
-import com.stellive.fansite.service.VideoService;
+import com.stellive.fansite.service.scheduling.ChannelScheduler;
+import com.stellive.fansite.service.scheduling.VideoScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest")
 public class HomeController {
 
-    private final ChannelService channelService;
-    private final VideoService videoService;
+    private final ChannelScheduler channelService;
+    private final VideoScheduler videoService;
 
     @GetMapping("")
     public String home() {

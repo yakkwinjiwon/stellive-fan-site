@@ -1,8 +1,8 @@
 package com.stellive.fansite;
 
-import com.stellive.fansite.service.ChannelService;
-import com.stellive.fansite.service.NewsService;
-import com.stellive.fansite.service.VideoService;
+import com.stellive.fansite.service.scheduling.ChannelScheduler;
+import com.stellive.fansite.service.scheduling.NewsService;
+import com.stellive.fansite.service.scheduling.VideoScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TestDataInit {
 
-    private final ChannelService channelService;
-    private final VideoService videoService;
+    private final ChannelScheduler channelService;
+    private final VideoScheduler videoService;
     private final NewsService noticeService;
 
 //    @EventListener(ApplicationReadyEvent.class)
