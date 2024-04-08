@@ -30,6 +30,9 @@ class ChannelServiceTest {
     @Autowired
     NewsScraper newsScraper;
 
+    @Autowired
+    TestClass testClass;
+
     @Test
     void updateChannels() {
         Channel channel = channelFetcher.fetchChannel(StellaChannel.HINA);
@@ -42,13 +45,8 @@ class ChannelServiceTest {
 
     @Test
     void updateChannel() {
-        callApi();
+         testClass.callApi();
     }
 
-    @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
-            backoff = @Backoff(delay = DELAY))
-    public void callApi() {
-        log.info("callApi");
-        throw new RestClientException("Error");
-    }
+
 }
