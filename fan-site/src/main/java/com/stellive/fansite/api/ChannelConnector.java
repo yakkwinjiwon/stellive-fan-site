@@ -27,7 +27,7 @@ public class ChannelConnector {
     private final ApiUtils apiUtils;
 
     @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
-            backoff = @Backoff(delay = DELAY))
+            backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
     public ChannelList callChannel(YoutubeChannel youtubeChannel) {
         URI uri = getChannelUri(youtubeChannel);
         return restTemplate.getForEntity(uri, ChannelList.class).getBody();
@@ -36,8 +36,7 @@ public class ChannelConnector {
     private URI getChannelUri(YoutubeChannel youtubeChannel) {
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
                 .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
-                .queryParam(PARAM_PART,
-                        PART_SNIPPET + ", " +
+                .queryParam(PARAM_PART, PART_SNIPPET + ", " +
                                 PART_BRANDING_SETTINGS)
                 .queryParam(PARAM_ID, youtubeChannel.getChannelId())
                 .build().toUri();

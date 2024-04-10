@@ -22,7 +22,7 @@ public class VideoScheduler {
     private final ApiUtils apiUtils;
 
     private final PlaylistItemFetcher playlistItemFetcher;
-    private final VideoFetcher videoFecther;
+    private final VideoFetcher videoFetcher;
 
     private final VideoRepo videoRepo;
 
@@ -31,10 +31,10 @@ public class VideoScheduler {
         List<Video> videos = new ArrayList<>();
 
         apiUtils.executeForEachChannel(youtubeChannel -> {
-            List<Video> fetchedVideos = playlistItemFetcher.fetchVideos(getAllVideoPlaylistId(youtubeChannel), maxResults);
-            fetchedVideos.forEach(videoFecther::setVideoDuration);
-            List<Video> determinedVideos = determineVideoType(youtubeChannel, fetchedVideos);
-            List<Video> updatedVideos = updateVideos(determinedVideos);
+            List<String> videoIds = playlistItemFetcher.fetchPlaylistItem(getAllVideoPlaylistId(youtubeChannel), maxResults);
+            VideoType videoType = youtubeChannel.isReplay() ? VideoType.REPLAY : VideoType.VIDEO;
+            List<Video> fetchedVideos = videoFetcher.fetchVideos(videoIds, videoType);
+            List<Video> updatedVideos = updateVideos(fetchedVideos);
 
             log.info("Updated Videos={}", updatedVideos);
             videos.addAll(updatedVideos);
@@ -44,23 +44,6 @@ public class VideoScheduler {
 
     private List<Video> updateVideos(List<Video> videos) {
         return videoRepo.save(videos);
-    }
-
-    private List<Video> determineVideoType(YoutubeChannel youtubeChannel,
-                                           List<Video> fetchedVideos) {
-        if (youtubeChannel.isReplay()) {
-            fetchedVideos.forEach(video -> video.setVideoType(VideoType.REPLAY));
-            return fetchedVideos;
-        }
-
-        fetchedVideos.forEach(video -> {
-            if (video.getDuration() <= 60) {
-                video.setVideoType(VideoType.SHORTS);
-            } else {
-                video.setVideoType(VideoType.VIDEO);
-            }
-        });
-        return fetchedVideos;
     }
 
     // 유튜브 id를 이용하여 전체 영상 플레이리스트 id를 생성.
@@ -73,35 +56,41 @@ public class VideoScheduler {
 
     public List<Video> updateMusics(Integer maxResults) {
         log.info("Update Musics");
-        List<Video> videos = new ArrayList<>();
+        List<Video> musics = new ArrayList<>();
 
         apiUtils.executeForEachChannel(youtubeChannel -> {
-            updateMusics(youtubeChannel, maxResults);
+            List<Video> updatedMusics = updateMusics(youtubeChannel, maxResults);
+            musics.addAll(updatedMusics);
         });
-        return videos;
+        return musics;
     }
 
     private List<Video> updateMusics(YoutubeChannel youtubeChannel,
                                      Integer maxResults) {
-        List<Video> videos = new ArrayList<>();
+        List<Video> musics = new ArrayList<>();
 
         youtubeChannel.getMusicPlaylistIds().forEach(playlistId -> {
             apiUtils.executeWithHandling(() -> {
-                List<Video> fetchedVideos = playlistItemFetcher.fetchVideos(playlistId, maxResults);
+                List<String> musicIds = playlistItemFetcher.fetchPlaylistItem(playlistId, maxResults);
+                List<Video> fetchedMusics = videoFetcher.fetchVideos(musicIds, VideoType.MUSIC);
+                List<Video> updatedVideos = updateVideos(fetchedMusics);
 
-                fetchedVideos.forEach(video -> {
-                    video.setVideoType(VideoType.MUSIC);
-                    videoFecther.setVideoDuration(video);
-                });
-
-                List<Video> updatedVideos = updateVideos(fetchedVideos);
                 log.info("Updated Musics={}", updatedVideos);
-
-                videos.addAll(updatedVideos);
+                musics.addAll(updatedVideos);
                 return null;
             });
         });
 
-        return videos;
+        return musics;
+    }
+
+    private List<Video> fetchVideos(List<String> videoIds,
+                                    VideoType videoType) {
+        videoIds.forEach(videoId -> {
+            if(isNewVideo(videoId)) {
+                Video video = videoFetcher.fetchVideo(videoId, videoType);
+                videoRepo.save(video);
+            }
+        })
     }
 }

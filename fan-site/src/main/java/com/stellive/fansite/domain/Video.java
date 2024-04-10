@@ -24,17 +24,12 @@ public class Video {
     private Channel channel;
 
     private Long duration;
-    private VideoType videoType;
+    private Integer viewCount;
     private String externalId;
     private String title;
     private String thumbnailUrl;
     private Instant publishTime;
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
-    public void setVideoType(VideoType videoType) {
-        this.videoType = videoType;
-    }
+    private Instant scheduledStartTime;
+    private VideoType videoType;
+    private LiveStatus liveStatus;
 }

@@ -14,4 +14,5 @@ public class PlaylistItemList {
 
     private String nextPageToken;
     private List<PlaylistItemItem> items;
+
 }

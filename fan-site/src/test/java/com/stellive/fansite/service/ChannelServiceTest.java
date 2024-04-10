@@ -1,46 +1,51 @@
 package com.stellive.fansite.service;
 
-import com.stellive.fansite.api.ChannelFetcher;
+import com.stellive.fansite.api.PlaylistItemFetcher;
+import com.stellive.fansite.api.VideoFetcher;
 import com.stellive.fansite.domain.Channel;
-import com.stellive.fansite.domain.News;
 import com.stellive.fansite.domain.StellaChannel;
-import com.stellive.fansite.dto.playlistitem.PlaylistItemList;
 import com.stellive.fansite.external.NewsScraper;
+import com.stellive.fansite.service.scheduling.ChannelScheduler;
+import com.stellive.fansite.service.scheduling.VideoScheduler;
+import com.stellive.fansite.utils.YoutubeApiConst;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.web.client.RestClientException;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
-import java.util.List;
+import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.DELAY;
-import static com.stellive.fansite.utils.YoutubeApiConst.MAX_ATTEMPTS;
-
+@Transactional
 @Slf4j
 @SpringBootTest
 class ChannelServiceTest {
 
     @Autowired
-    ChannelFetcher channelFetcher;
+    ChannelScheduler channelScheduler;
+
+    @Autowired
+    PlaylistItemFetcher playlistItemFetcher;
+
+    @Autowired
+    VideoFetcher videoFetcher;
 
     @Autowired
     NewsScraper newsScraper;
+
+    @Autowired
+    VideoScheduler videoScheduler;
 
     @Autowired
     TestClass testClass;
 
     @Test
     void updateChannels() {
-        Channel channel = channelFetcher.fetchChannel(StellaChannel.HINA);
-        log.info("channel={}", channel);
+        channelScheduler.updateChannels();
 
-        List<News> newses = newsScraper.getNews();
-        newses.forEach(news -> log.info("news={}", news));
+        videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
 
+        videoScheduler.updateMusics(MAX_RESULTS_VIDEO);
     }
 
     @Test

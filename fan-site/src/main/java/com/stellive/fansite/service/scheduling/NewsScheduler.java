@@ -12,20 +12,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NewsService {
+public class NewsScheduler {
 
     private final NewsScraper newsScraper;
 
-    private final NewsRepo noticeRepo;
+    private final NewsRepo newsRepo;
 
     public List<News> updateNotices() {
         log.info("update Notices");
         List<News> notices = newsScraper.getNews();
         log.info("updated Notices={}", notices);
-        return noticeRepo.save(notices);
-    }
-
-    public List<News> findAllNotices() {
-        return noticeRepo.findAll();
+        return newsRepo.save(notices);
     }
 }

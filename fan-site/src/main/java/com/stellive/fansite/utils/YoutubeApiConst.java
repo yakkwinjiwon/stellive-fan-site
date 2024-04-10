@@ -5,7 +5,6 @@ public class YoutubeApiConst {
     /**
      * URL
      */
-    public static final String URL_SEARCH = "https://www.googleapis.com/youtube/v3/search";
     public static final String URL_CHANNEL = "https://www.googleapis.com/youtube/v3/channels";
     public static final String URL_PLAYLIST_ITEMS = "https://www.googleapis.com/youtube/v3/playlistItems";
     public static final String URL_VIDEO = "https://www.googleapis.com/youtube/v3/videos";
@@ -31,6 +30,12 @@ public class YoutubeApiConst {
     public static final String PART_SNIPPET = "snippet";
     public static final String PART_CONTENT_DETAILS = "contentDetails";
     public static final String PART_BRANDING_SETTINGS = "brandingSettings";
+    public static final String PART_STATISTICS = "statistics";
+    public static final String PART_LIVE_STREAMING_DETAILS = "liveStreamingDetails";
+
+    /**
+     * Order value
+     */
     public static final String ORDER_DATE= "date";
     public static final String ORDER_RELEVANCE= "relevance";
     public static final String ORDER_VIEW_COUNT= "viewCount";
@@ -45,14 +50,16 @@ public class YoutubeApiConst {
     /**
      * Max Results value
      */
-    public static final Integer MAX_RESULTS_VIDEO = 1;
+    public static final Integer MAX_RESULTS_VIDEO = 2;
     public static final Integer MAX_RESULTS_MUSIC = 1;
     public static final Integer MAX_RESULTS_ALL = 50;
 
     /**
      * Retryable value
      */
-    public static final int MAX_ATTEMPTS = 2;
+    public static final int MAX_ATTEMPTS = 3;
     public static final int DELAY = 1000;
+    public static final int MULTIPLIER = 2;
+    public static final int MAX_DELAY = 10000;
 
 }

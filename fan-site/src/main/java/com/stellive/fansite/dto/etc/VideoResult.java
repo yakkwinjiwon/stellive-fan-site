@@ -10,6 +10,6 @@ import java.util.List;
 @Builder
 public class VideoResult {
 
-    List<Video> videos;
+    List<String> videoIds;
     String nextPageToken;
 }

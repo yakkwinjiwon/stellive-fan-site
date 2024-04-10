@@ -1,6 +1,6 @@
 package com.stellive.fansite.dto.playlistitem;
 
-import lombok.AllArgsConstructor;
+import com.stellive.fansite.dto.video.VideoLiveStreamingDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

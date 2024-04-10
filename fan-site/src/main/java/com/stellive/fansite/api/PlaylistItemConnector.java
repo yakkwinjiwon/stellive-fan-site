@@ -26,7 +26,7 @@ public class PlaylistItemConnector {
     private final ApiUtils apiUtils;
 
     @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
-            backoff = @Backoff(delay = DELAY))
+            backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
     public PlaylistItemList callPlaylistItem(String playlistId,
                                              Integer maxResults,
                                              String nextPageToken) {

@@ -25,17 +25,20 @@ public class VideoConnector {
     private final ApiUtils apiUtils;
 
     @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
-            backoff = @Backoff(delay = DELAY))
-    public VideoList callVideo(Video video) {
-        URI uri = getVideoUri(video);
+            backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
+    public VideoList callVideo(String externalId) {
+        URI uri = getVideoUri(externalId);
         return restTemplate.getForEntity(uri, VideoList.class).getBody();
     }
 
-    private URI getVideoUri(Video video) {
+    private URI getVideoUri(String externalId) {
         return UriComponentsBuilder.fromHttpUrl(URL_VIDEO)
                 .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
-                .queryParam(PARAM_PART, PART_CONTENT_DETAILS)
-                .queryParam(PARAM_ID, video.getExternalId())
+                .queryParam(PARAM_PART, PART_CONTENT_DETAILS + ", " +
+                                PART_SNIPPET + ", " +
+                                PART_STATISTICS + ", " +
+                                PART_LIVE_STREAMING_DETAILS)
+                .queryParam(PARAM_ID, externalId)
                 .build().toUri();
     }
 

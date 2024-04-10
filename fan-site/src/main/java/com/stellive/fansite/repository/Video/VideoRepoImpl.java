@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,5 +29,10 @@ public class VideoRepoImpl implements VideoRepo {
     @Override
     public List<Video> findByChannelIdAndVideoType(Long channelId, VideoType videoType) {
         return videoDataRepo.findByChannelIdAndVideoType(channelId, videoType);
+    }
+
+    @Override
+    public Optional<Video> findByExternalId(String externalId) {
+        return videoDataRepo.findByExternalId(externalId);
     }
 }
