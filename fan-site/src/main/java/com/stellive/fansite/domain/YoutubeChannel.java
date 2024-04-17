@@ -6,7 +6,6 @@ public interface YoutubeChannel {
 
     Long getId();
     String getChannelId();
-    List<String> getMusicPlaylistIds();
     Boolean isReplay();
 
 

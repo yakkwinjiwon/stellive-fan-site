@@ -4,5 +4,6 @@ public enum VideoType {
     VIDEO,
     MUSIC,
     SHORTS,
-    REPLAY
+    REPLAY,
+    UNKNOWN
 }

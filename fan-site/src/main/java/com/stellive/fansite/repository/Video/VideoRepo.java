@@ -10,6 +10,7 @@ public interface VideoRepo {
 
     List<Video> save(List<Video> videos);
 
+    List<Video> findAll();
     List<Video> findByChannelId(Long channelId);
     List<Video> findByChannelIdAndVideoType(Long channelId, VideoType videoType);
     Optional<Video> findByExternalId(String externalId);

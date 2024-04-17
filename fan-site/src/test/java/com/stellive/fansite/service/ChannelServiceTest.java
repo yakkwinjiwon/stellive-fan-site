@@ -44,8 +44,6 @@ class ChannelServiceTest {
         channelScheduler.updateChannels();
 
         videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
-
-        videoScheduler.updateMusics(MAX_RESULTS_VIDEO);
     }
 
     @Test

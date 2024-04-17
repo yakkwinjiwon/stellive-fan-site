@@ -50,7 +50,7 @@ public class YoutubeApiConst {
     /**
      * Max Results value
      */
-    public static final Integer MAX_RESULTS_VIDEO = 2;
+    public static final Integer MAX_RESULTS_VIDEO = 5;
     public static final Integer MAX_RESULTS_MUSIC = 1;
     public static final Integer MAX_RESULTS_ALL = 50;
 

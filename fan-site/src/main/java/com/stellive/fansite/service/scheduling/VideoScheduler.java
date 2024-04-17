@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.stellive.fansite.utils.AppConst.*;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,8 +33,11 @@ public class VideoScheduler {
         List<Video> videos = new ArrayList<>();
 
         apiUtils.executeForEachChannel(youtubeChannel -> {
-            List<String> videoIds = playlistItemFetcher.fetchPlaylistItem(getAllVideoPlaylistId(youtubeChannel), maxResults);
-            VideoType videoType = youtubeChannel.isReplay() ? VideoType.REPLAY : VideoType.VIDEO;
+            String playlistId = getAllVideoPlaylistId(youtubeChannel);
+            List<String> videoIds = playlistItemFetcher.fetchPlaylistItem(playlistId, maxResults);
+            removeExistingVideoIds(videoIds);
+
+            VideoType videoType = youtubeChannel.isReplay() ? VideoType.REPLAY : VideoType.UNKNOWN;
             List<Video> fetchedVideos = videoFetcher.fetchVideos(videoIds, videoType);
             List<Video> updatedVideos = updateVideos(fetchedVideos);
 
@@ -54,43 +59,9 @@ public class VideoScheduler {
         return builder.toString();
     }
 
-    public List<Video> updateMusics(Integer maxResults) {
-        log.info("Update Musics");
-        List<Video> musics = new ArrayList<>();
-
-        apiUtils.executeForEachChannel(youtubeChannel -> {
-            List<Video> updatedMusics = updateMusics(youtubeChannel, maxResults);
-            musics.addAll(updatedMusics);
-        });
-        return musics;
-    }
-
-    private List<Video> updateMusics(YoutubeChannel youtubeChannel,
-                                     Integer maxResults) {
-        List<Video> musics = new ArrayList<>();
-
-        youtubeChannel.getMusicPlaylistIds().forEach(playlistId -> {
-            apiUtils.executeWithHandling(() -> {
-                List<String> musicIds = playlistItemFetcher.fetchPlaylistItem(playlistId, maxResults);
-                List<Video> fetchedMusics = videoFetcher.fetchVideos(musicIds, VideoType.MUSIC);
-                List<Video> updatedVideos = updateVideos(fetchedMusics);
-
-                log.info("Updated Musics={}", updatedVideos);
-                musics.addAll(updatedVideos);
-                return null;
-            });
-        });
-
-        return musics;
-    }
-
-    private List<Video> fetchVideos(List<String> videoIds,
-                                    VideoType videoType) {
-        videoIds.forEach(videoId -> {
-            if(isNewVideo(videoId)) {
-                Video video = videoFetcher.fetchVideo(videoId, videoType);
-                videoRepo.save(video);
-            }
-        })
+    // API 사용량을 줄이기 위해 이미 존재하는 영상 id를 제거
+    private void removeExistingVideoIds(List<String> videoIds) {
+        List<String> externalIds = apiUtils.extractFields(videoRepo.findAll(), FIELD_EXTERNAL_ID, String.class);
+        videoIds.removeAll(externalIds);
     }
 }

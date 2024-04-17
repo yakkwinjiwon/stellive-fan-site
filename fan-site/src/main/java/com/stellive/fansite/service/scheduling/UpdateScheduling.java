@@ -2,6 +2,7 @@ package com.stellive.fansite.service.scheduling;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import static com.stellive.fansite.utils.YoutubeApiConst.*;
@@ -22,17 +23,15 @@ public class UpdateScheduling {
         log.info("Update all");
         channelScheduler.updateChannels();
         videoScheduler.updateVideos(MAX_RESULTS_ALL);
-        videoScheduler.updateMusics(MAX_RESULTS_ALL);
         newsScheduler.updateNotices();
     }
 
-//    @Scheduled(cron = "*/10 * * * * ?")
+    @Scheduled(cron = "*/10 * * * * ?")
 //    @Scheduled(cron = "* */10 * * * ?")
     public void updateRecent() {
         log.info("Update recent");
         channelScheduler.updateChannels();
         videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
-        videoScheduler.updateMusics(MAX_RESULTS_MUSIC);
         newsScheduler.updateNotices();
     }
 

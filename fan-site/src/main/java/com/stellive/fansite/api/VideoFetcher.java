@@ -3,20 +3,16 @@ package com.stellive.fansite.api;
 import com.stellive.fansite.domain.*;
 import com.stellive.fansite.dto.video.*;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
-import com.stellive.fansite.repository.Video.VideoRepo;
-import com.stellive.fansite.utils.AppConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static com.stellive.fansite.utils.AppConst.*;
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,28 +23,38 @@ public class VideoFetcher {
 
     private final ChannelRepo channelRepo;
 
-    public Video fetchVideo(String externalId,
+    public List<Video> fetchVideos(List<String> externalIds,
+                                   VideoType videoType) {
+        StringBuilder builder = new StringBuilder();
+        externalIds.forEach(externalId -> builder.append(externalId).append(","));
+        String externalId = builder.toString();
+        return fetchVideo(externalId, videoType);
+    }
+
+    public List<Video> fetchVideo(String externalId,
                             VideoType videoType) {
         VideoList list = videoConnector.callVideo(externalId);
         return buildVideo(list, externalId, videoType);
     }
 
-    private Video buildVideo(VideoList list,
-                             String externalId,
-                             VideoType videoType) {
-        VideoItem item = getItem(list);
-        return Video.builder()
-                .externalId(externalId)
-                .channel(getChannel(item))
-                .duration(getDuration(item))
-                .scheduledStartTime(getScheduledStartTime(item))
-                .publishTime(getPublishTime(item))
-                .title(getTitle(item))
-                .liveStatus(getLiveStatus(item))
-                .thumbnailUrl(getThumbnailUrl(item))
-                .viewCount(getViewCount(item))
-                .videoType(determineVideoType(item, videoType))
-                .build();
+    private List<Video> buildVideo(VideoList list,
+                                   String externalId,
+                                   VideoType videoType) {
+        List<VideoItem> items = getItems(list);
+        return items.stream()
+                .map(item -> Video.builder().externalId(externalId)
+                        .channel(getChannel(item))
+                        .duration(getDuration(item))
+                        .scheduledStartTime(getScheduledStartTime(item))
+                        .publishTime(getPublishTime(item))
+                        .title(getTitle(item))
+                        .liveStatus(getLiveStatus(item))
+                        .thumbnailUrl(getThumbnailUrl(item))
+                        .viewCount(getViewCount(item))
+                        .videoType(determineVideoType(item, videoType))
+                        .build())
+                .toList();
+
     }
 
     private Channel getChannel(VideoItem item) {
@@ -59,10 +65,9 @@ public class VideoFetcher {
         return channelRepo.findByExternalId(channelId).orElse(null);
     }
 
-    private VideoItem getItem(VideoList list) {
+    private List<VideoItem> getItems(VideoList list) {
         return Optional.ofNullable(list)
                 .map(VideoList::getItems)
-                .map(List::getFirst)
                 .orElse(null);
     }
 
@@ -130,7 +135,7 @@ public class VideoFetcher {
 
     private VideoType determineVideoType(VideoItem item,
                                          VideoType videoType) {
-        if (videoType == VideoType.VIDEO) {
+        if (videoType == VideoType.UNKNOWN) {
             return (getDuration(item) <= 60) ? VideoType.SHORTS : VideoType.VIDEO;
         }
         return videoType;

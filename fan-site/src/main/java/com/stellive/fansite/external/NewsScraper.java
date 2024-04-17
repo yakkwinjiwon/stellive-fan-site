@@ -41,12 +41,11 @@ public class NewsScraper {
     }
 
     private List<News> parseElement(ChromeDriver driver) {
-        ArrayList<News> news = new ArrayList<>();
         List<WebElement> newsElements = driver.findElements(By.cssSelector(CSS_SELECTOR_NEWS));
-        newsElements.stream()
+        return newsElements.stream()
                 .limit(NEWS_LIMIT)
-                .forEach(element -> news.add(buildNotice(element)));
-        return news;
+                .map(this::buildNotice)
+                .toList();
     }
 
     private News buildNotice(WebElement element) {

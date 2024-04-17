@@ -60,16 +60,11 @@ public class PlaylistItemFetcher {
     }
 
     private List<String> getVideoIds(PlaylistItemList list) {
-        List<String> videoIds = new ArrayList<>();
         List<PlaylistItemItem> items = getItems(list);
-
-        items.forEach(item -> {
-            // 볼 수 없는 영상은 썸네일이 없음
-            if (isThumbnailPresent(item)) {
-                videoIds.add(getVideoId(item));
-            }
-        });
-        return videoIds;
+        return items.stream()
+                .filter(this::isThumbnailPresent)
+                .map(this::getVideoId)
+                .toList();
     }
 
     private String getVideoId(PlaylistItemItem item) {
