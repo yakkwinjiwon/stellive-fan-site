@@ -6,7 +6,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.*;
 
 @Component
 @Slf4j

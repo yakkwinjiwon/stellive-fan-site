@@ -1,10 +1,9 @@
-package com.stellive.fansite.api;
+package com.stellive.fansite.api.Youtube;
 
 import com.stellive.fansite.dto.playlistitem.PlaylistItemList;
-import com.stellive.fansite.utils.ApiUtils;
+import com.stellive.fansite.utils.ApiKeyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ import static com.stellive.fansite.utils.YoutubeApiConst.*;
 public class PlaylistItemConnector {
 
     private final RestTemplate restTemplate;
-    private final ApiUtils apiUtils;
+    private final ApiKeyManager keyManager;
 
     @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
             backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
@@ -38,7 +37,7 @@ public class PlaylistItemConnector {
                                    Integer maxResults,
                                    String nextPageToken) {
         return UriComponentsBuilder.fromHttpUrl(URL_PLAYLIST_ITEMS)
-                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
+                .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
                 .queryParam(PARAM_PART, PART_SNIPPET)
                 .queryParam(PARAM_PLAYLIST_ID, playlistId)
                 .queryParam(PARAM_MAX_RESULTS, maxResults)

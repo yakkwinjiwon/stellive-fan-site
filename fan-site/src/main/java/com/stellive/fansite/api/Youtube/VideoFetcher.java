@@ -1,4 +1,4 @@
-package com.stellive.fansite.api;
+package com.stellive.fansite.api.Youtube;
 
 import com.stellive.fansite.domain.*;
 import com.stellive.fansite.dto.video.*;

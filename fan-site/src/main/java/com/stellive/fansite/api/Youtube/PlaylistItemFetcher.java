@@ -1,6 +1,5 @@
-package com.stellive.fansite.api;
+package com.stellive.fansite.api.Youtube;
 
-import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.dto.etc.VideoResult;
 import com.stellive.fansite.dto.playlistitem.*;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.*;
 
 @Component
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class PlaylistItemFetcher {
 
         return videoIds;
     }
-
+    
     private boolean shouldContinueFetching(Integer maxResults, String nextPageToken) {
         return nextPageToken != null && maxResults.equals(MAX_RESULTS_ALL);
     }

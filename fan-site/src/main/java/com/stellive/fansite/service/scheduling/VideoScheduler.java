@@ -1,12 +1,13 @@
 package com.stellive.fansite.service.scheduling;
 
-import com.stellive.fansite.api.PlaylistItemFetcher;
-import com.stellive.fansite.api.VideoFetcher;
+import com.stellive.fansite.api.Youtube.PlaylistItemFetcher;
+import com.stellive.fansite.api.Youtube.VideoFetcher;
 import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.domain.VideoType;
 import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.repository.Video.VideoRepo;
 import com.stellive.fansite.utils.ApiUtils;
+import com.stellive.fansite.utils.AppUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,6 @@ import static com.stellive.fansite.utils.AppConst.*;
 @Slf4j
 public class VideoScheduler {
 
-    private final ApiUtils apiUtils;
-
     private final PlaylistItemFetcher playlistItemFetcher;
     private final VideoFetcher videoFetcher;
 
@@ -32,7 +31,7 @@ public class VideoScheduler {
         log.info("Update Videos");
         List<Video> videos = new ArrayList<>();
 
-        apiUtils.executeForEachChannel(youtubeChannel -> {
+        ApiUtils.executeForEachChannel(youtubeChannel -> {
             String playlistId = getAllVideoPlaylistId(youtubeChannel);
             List<String> videoIds = playlistItemFetcher.fetchPlaylistItem(playlistId, maxResults);
             removeExistingVideoIds(videoIds);
@@ -61,7 +60,7 @@ public class VideoScheduler {
 
     // API 사용량을 줄이기 위해 이미 존재하는 영상 id를 제거
     private void removeExistingVideoIds(List<String> videoIds) {
-        List<String> externalIds = apiUtils.extractFields(videoRepo.findAll(), FIELD_EXTERNAL_ID, String.class);
+        List<String> externalIds = AppUtils.extractFields(videoRepo.findAll(), FIELD_EXTERNAL_ID, String.class);
         videoIds.removeAll(externalIds);
     }
 }

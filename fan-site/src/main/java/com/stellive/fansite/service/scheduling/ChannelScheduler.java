@@ -1,6 +1,6 @@
 package com.stellive.fansite.service.scheduling;
 
-import com.stellive.fansite.api.ChannelFetcher;
+import com.stellive.fansite.api.Youtube.ChannelFetcher;
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
 import com.stellive.fansite.utils.ApiUtils;
@@ -16,8 +16,6 @@ import java.util.List;
 @Slf4j
 public class ChannelScheduler {
 
-    private final ApiUtils apiUtils;
-
     private final ChannelFetcher channelFetcher;
 
     private final ChannelRepo channelRepo;
@@ -26,7 +24,7 @@ public class ChannelScheduler {
         log.info("Update all Channels");
         List<Channel> channels = new ArrayList<>();
 
-        apiUtils.executeForEachChannel(youtubeChannel -> {
+        ApiUtils.executeForEachChannel(youtubeChannel -> {
             Channel fetchedChannel = channelFetcher.fetchChannel(youtubeChannel);
             Channel updatedChannel = updateChannel(fetchedChannel);
 

@@ -1,14 +1,12 @@
-package com.stellive.fansite.api;
+package com.stellive.fansite.api.Youtube;
 
 import com.stellive.fansite.domain.YoutubeChannel;
 import com.stellive.fansite.dto.channel.ChannelList;
-import com.stellive.fansite.exceptions.ApiResponseException;
-import com.stellive.fansite.utils.ApiUtils;
+import com.stellive.fansite.utils.ApiKeyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ import static com.stellive.fansite.utils.YoutubeApiConst.*;
 public class ChannelConnector {
 
     private final RestTemplate restTemplate;
-    private final ApiUtils apiUtils;
+    private final ApiKeyManager keyManager;
 
     @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
             backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
@@ -35,7 +33,7 @@ public class ChannelConnector {
 
     private URI getChannelUri(YoutubeChannel youtubeChannel) {
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
-                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
+                .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
                 .queryParam(PARAM_PART, PART_SNIPPET + ", " +
                                 PART_BRANDING_SETTINGS)
                 .queryParam(PARAM_ID, youtubeChannel.getChannelId())

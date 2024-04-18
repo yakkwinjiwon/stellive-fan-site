@@ -1,4 +1,4 @@
-package com.stellive.fansite.api;
+package com.stellive.fansite.api.Youtube;
 
 import com.stellive.fansite.domain.Channel;
 import com.stellive.fansite.domain.YoutubeChannel;
@@ -29,7 +29,6 @@ public class ChannelFetcher {
     private Channel buildChannel(ChannelList list,
                                  YoutubeChannel youtubeChannel) {
         ChannelItem item = getItem(list, youtubeChannel);
-
         return Channel.builder()
                 .id(youtubeChannel.getId())
                 .externalId(youtubeChannel.getChannelId())
@@ -40,7 +39,8 @@ public class ChannelFetcher {
                 .build();
     }
 
-    private ChannelItem getItem(ChannelList list, YoutubeChannel youtubeChannel) {
+    private ChannelItem getItem(ChannelList list,
+                                YoutubeChannel youtubeChannel) {
         return Optional.ofNullable(list)
                 .map(ChannelList::getItems)
                 .map(List::getFirst)

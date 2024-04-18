@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,6 @@ public class UpdateScheduling {
         log.info("Update all");
         channelScheduler.updateChannels();
         videoScheduler.updateVideos(MAX_RESULTS_ALL);
-        newsScheduler.updateNotices();
     }
 
     @Scheduled(cron = "*/10 * * * * ?")
@@ -32,7 +31,6 @@ public class UpdateScheduling {
         log.info("Update recent");
         channelScheduler.updateChannels();
         videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
-        newsScheduler.updateNotices();
     }
 
 //    @Scheduled(cron = "0 0 0 * * ?")

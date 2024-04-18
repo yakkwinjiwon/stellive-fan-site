@@ -1,8 +1,7 @@
-package com.stellive.fansite.api;
+package com.stellive.fansite.api.Youtube;
 
-import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.dto.video.VideoList;
-import com.stellive.fansite.utils.ApiUtils;
+import com.stellive.fansite.utils.ApiKeyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
@@ -14,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.stellive.fansite.utils.YoutubeApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ import static com.stellive.fansite.utils.YoutubeApiConst.*;
 public class VideoConnector {
 
     private final RestTemplate restTemplate;
-    private final ApiUtils apiUtils;
+    private final ApiKeyManager keyManager;
 
     @Retryable(value = {RestClientException.class}, maxAttempts = MAX_ATTEMPTS,
             backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
@@ -33,7 +32,7 @@ public class VideoConnector {
 
     private URI getVideoUri(String externalId) {
         return UriComponentsBuilder.fromHttpUrl(URL_VIDEO)
-                .queryParam(PARAM_KEY, apiUtils.getYoutubeApiKey())
+                .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
                 .queryParam(PARAM_PART, PART_CONTENT_DETAILS + ", " +
                                 PART_SNIPPET + ", " +
                                 PART_STATISTICS + ", " +
