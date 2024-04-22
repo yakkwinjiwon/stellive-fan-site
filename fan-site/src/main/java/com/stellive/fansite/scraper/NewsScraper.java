@@ -25,8 +25,8 @@ public class NewsScraper {
 
     private List<News> parseNews(ChromeDriver driver,
                                  WebDriverWait wait) {
-        wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_NEWS)));
-        List<WebElement> newsElements = driver.findElements(By.cssSelector(CSS_SELECTOR_NEWS));
+        wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_NEWS_LIST)));
+        List<WebElement> newsElements = driver.findElements(By.cssSelector(CSS_SELECTOR_NEWS_LIST));
 
         return newsElements.stream()
                 .limit(NEWS_LIMIT)

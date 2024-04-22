@@ -24,8 +24,9 @@ public class NewsScheduler {
     public List<News> updateNotices(ChromeDriver driver,
                                     WebDriverWait wait) {
         log.info("update Notices");
-        List<News> notices = newsScraper.scrapeNews(driver, wait);
-        log.info("updated Notices={}", notices);
-        return newsRepo.save(notices);
+        List<News> scrapedNotices = newsScraper.scrapeNews(driver, wait);
+        List<News> updatedNotices = newsRepo.save(scrapedNotices);
+        log.info("updated Notices={}", updatedNotices);
+        return updatedNotices;
     }
 }
