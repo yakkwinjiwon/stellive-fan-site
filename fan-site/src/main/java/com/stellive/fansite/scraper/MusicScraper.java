@@ -1,5 +1,6 @@
 package com.stellive.fansite.scraper;
 
+import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -23,6 +24,8 @@ public class MusicScraper {
     public List<String> scrapeMusicIds(ChromeDriver driver,
                                        WebDriverWait wait) {
         driver.get(URL_MUSIC);
+        wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
+        driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
         return parseMusic(driver, wait);
     }
 
@@ -40,14 +43,15 @@ public class MusicScraper {
                                  WebDriverWait wait,
                                  WebElement element) {
         element.sendKeys(Keys.CONTROL, Keys.RETURN);
-        List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-        driver.switchTo().window(tabs.getLast());
+        ScraperUtils.switchToLatestTab(driver);
 
         wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_IMG)));
         String url = driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_IMG))
                 .getAttribute(ATTRIBUTE_SRC);
+        log.info("Music URL: {}", url);
 
         driver.close();
+        ScraperUtils.switchToLatestTab(driver);
         return extractMusicId(url);
     }
 

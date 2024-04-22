@@ -5,6 +5,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.stellive.fansite.utils.ScraperConst.*;
 
 public class ScraperUtils {
@@ -23,4 +26,8 @@ public class ScraperUtils {
         return new WebDriverWait(driver, WAIT_TIMEOUT);
     }
 
+    public static void switchToLatestTab(ChromeDriver driver) {
+        List<String> tabs = new ArrayList<>(driver.getWindowHandles());
+        driver.switchTo().window(tabs.getLast());
+    }
 }

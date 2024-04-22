@@ -26,7 +26,7 @@ public class ScraperConst {
     public static final String CSS_SELECTOR_NEWS_IMG_URL = ".bh_img_content a img";
     public static final String CSS_SELECTOR_NEWS_TITLE = ".bh_title.ff-nn .title span";
     public static final String CSS_SELECTOR_NEWS_PUBLISH_TIME = ".bh_content .ff-nn";
-    public static final String CSS_SELECTOR_MUSIC_LIST = ".bh.bh_item.item a";
+    public static final String CSS_SELECTOR_MUSIC_LIST = ".bh_title a";
     public static final String CSS_SELECTOR_MUSIC_MORE = ".more_btn.ds-f.jc-c.hide";
     public static final String CSS_SELECTOR_MUSIC_IMG = ".youtube_converted img";
 
@@ -45,5 +45,5 @@ public class ScraperConst {
      * Pattern
      */
 
-    public static final Pattern PATTERN_MUSIC_ID = Pattern.compile("https://img.youtube.com/vi/[a-zA-Z0-9]+/mqdefault.jpg");
+    public static final Pattern PATTERN_MUSIC_ID = Pattern.compile("https://img.youtube.com/vi/([a-zA-Z0-9]+)/mqdefault.jpg");
 }

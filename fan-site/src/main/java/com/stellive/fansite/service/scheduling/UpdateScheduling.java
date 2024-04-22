@@ -34,11 +34,10 @@ public class UpdateScheduling {
 //    @Scheduled(cron = "* */10 * * * ?")
     public void updateRecent() {
         log.info("Update recent");
-        channelScheduler.updateChannels();
+//        channelScheduler.updateChannels();
 //        videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
 
         ChromeDriver driver = ScraperUtils.getDriver();
-        log.info("driver={}", driver.);
         WebDriverWait wait = ScraperUtils.getWait(driver);
 //        newsScheduler.updateNotices(driver, wait);
         musicScheduler.updateMusics(driver, wait);
