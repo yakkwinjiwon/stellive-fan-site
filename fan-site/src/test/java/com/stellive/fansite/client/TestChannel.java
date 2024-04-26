@@ -12,8 +12,7 @@ import static com.stellive.fansite.utils.TestConst.*;
 @AllArgsConstructor
 public enum TestChannel implements YoutubeChannel {
 
-    VALID(1L, CHANNEL_ID_VALID),
-    INVALID_BY_CHANNEL_ID(2L, CHANNEL_ID_INVALID);
+    VALID(1L, CHANNEL_ID);
 
     private final Long id;
     private final String channelId;

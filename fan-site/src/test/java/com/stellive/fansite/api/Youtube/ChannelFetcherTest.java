@@ -36,7 +36,7 @@ class ChannelFetcherTest {
 
     @Test
     @DisplayName("ChannelList를 받아 Channel반환")
-    void testFetchChannel() {
+    void fetchChannel() {
         // given
         YoutubeChannel youtubeChannel = TestChannel.VALID;
         ChannelList channelList = TestUtils.getChannelList();

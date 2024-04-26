@@ -2,24 +2,29 @@ package com.stellive.fansite.utils;
 
 public class TestConst {
 
-    public static final String OK = "ok";
-    public static final String FAIL = "fail";
+    public static final String CHANNEL_THUMBNAIL_URL = "thumbnail url";
+    public static final String CHANNEL_CUSTOM_URL = "custom url";
+    public static final String CHANNEL_ID = "id";
+    public static final String CHANNEL_BANNER_EXTERNAL_URL = "banner external url";
 
-    public static final String CHANNEL_ID_VALID = "UC7_uO3Vsk323nA3LeQX0_sw";
-    public static final String CHANNEL_ID_INVALID = "invalid channel id";
-    public static final String PLAYLIST_ID_VALID = "PLsF-WIxstzZmzk70V2aj1e6NawmmquvdR";
-    public static final String PLAYLIST_ID_INVALID = "invalid playlist id";
-    public static final String VIDEO_EXTERNAL_ID_VALID = "PQufcfQtvLg";
-    public static final String VIDEO_EXTERNAL_ID_INVALID = "invalid video external id";
-    public static final String CHANNEL_RESPONSE_INVALID = "invalid channel json";
+    public static final String PLAYLIST_ITEM_ID = "id";
+    public static final String PLAYLIST_ITEM_THUMBNAIL_URL = "thumbnail url";
+    public static final String PLAYLIST_ID_VALID = "valid playlist id";
 
-    public static final String CHANNEL_THUMBNAIL_URL = "https://yt3.ggpht.com/cjCxyd5fP8e7ozjZK7MmNizTGMV08EmC_Psd-bt6wA-VDPI5FwZ6qv0EgpIzoSpSeTrhl5qy=s800-c-k-c0x00ffffff-no-rj";
-    public static final String CHANNEL_TITLE = "개십스레기 컵헤드";
-    public static final String CHANNEL_CUSTOM_URL = "@haedoong009";
-    public static final String CHANNEL_ID = "UC7_uO3Vsk323nA3LeQX0_sw";
-    public static final String CHANNEL_BANNER_EXTERNAL_URL = "https://yt3.googleusercontent.com/3ovJpnzA6wGERmmMg7LYQ0NHmnXtEuMgVBMI3lov8bI4GXf6sA2iu5j0Uj-94m9N71hAlCR2";
+    public static final String VIDEO_EXTERNAL_ID = "video external id";
+    public static final String VIDEO_TITLE = "title";
+    public static final String VIDEO_DURATION = AppConst.DURATION_DEFAULT;
+    public static final String VIDEO_SCHEDULED_START_TIME = AppConst.INSTANT_DEFAULT;
+    public static final Integer VIDEO_VIEW_COUNT = 5;
+    public static final String VIDEO_CHANNEL_ID = "channel id";
+    public static final String VIDEO_LIVE_BROADCAST_CONTENT = "live";
+    public static final String VIDEO_THUMBNAIL_URL = "thumbnail url";
+    public static final String VIDEO_PUBLISHED_AT = AppConst.INSTANT_DEFAULT;
 
 
+
+    public static final String VIDEO_RESULT_ID = "id";
+    public static final String VIDEO_RESULT_NEXT_PAGE_TOKEN = "next page token";
 
 
 }
