@@ -33,7 +33,7 @@ public class VideoScheduler {
 
         ApiUtils.executeForEachChannel(youtubeChannel -> {
             String playlistId = getAllVideoPlaylistId(youtubeChannel);
-            List<String> videoIds = playlistItemFetcher.fetchPlaylistItem(playlistId, maxResults);
+            List<String> videoIds = playlistItemFetcher.fetchVideoIds(playlistId, maxResults);
             removeExistingVideoIds(videoIds);
 
             VideoType videoType = youtubeChannel.isReplay() ? VideoType.REPLAY : VideoType.UNKNOWN;

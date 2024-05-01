@@ -19,8 +19,8 @@ public class PlaylistItemFetcher {
 
     private final PlaylistItemConnector playlistItemConnector;
 
-    public List<String> fetchPlaylistItem(String playlistId,
-                                   Integer maxResults) {
+    public List<String> fetchVideoIds(String playlistId,
+                                      Integer maxResults) {
         List<String> videoIds = new ArrayList<>();
         VideoResult response;
         String nextPageToken = null;
@@ -33,14 +33,15 @@ public class PlaylistItemFetcher {
 
         return videoIds;
     }
-    
-    private boolean shouldContinueFetching(Integer maxResults, String nextPageToken) {
+
+    private boolean shouldContinueFetching(Integer maxResults,
+                                           String nextPageToken) {
         return nextPageToken != null && maxResults.equals(MAX_RESULTS_ALL);
     }
 
-    private VideoResult fetchPlaylistItem(String playlistId,
-                                          Integer maxResults,
-                                          String nextPageToken) {
+    public VideoResult fetchPlaylistItem(String playlistId,
+                                     Integer maxResults,
+                                     String nextPageToken) {
         PlaylistItemList list = playlistItemConnector.callPlaylistItem(playlistId, maxResults, nextPageToken);
         return buildVideoResponse(list);
     }

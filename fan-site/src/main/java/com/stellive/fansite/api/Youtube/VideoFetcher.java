@@ -39,7 +39,8 @@ public class VideoFetcher {
                                    VideoType videoType) {
         List<VideoItem> items = getItems(list);
         return items.stream()
-                .map(item -> Video.builder().externalId(externalId)
+                .map(item -> Video.builder()
+                        .externalId(externalId)
                         .channel(getChannel(item))
                         .duration(getDuration(item))
                         .scheduledStartTime(getScheduledStartTime(item))
