@@ -9,6 +9,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -31,6 +32,14 @@ public class VideoConnector {
     }
 
     private URI getVideoUri(String externalId) {
+        UriBuilder builder = UriComponentsBuilder.fromHttpUrl(URL_VIDEO)
+                .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
+                .queryParam(PARAM_PART, PART_CONTENT_DETAILS + ", " +
+                        PART_SNIPPET + ", " +
+                        PART_STATISTICS + ", " +
+                        PART_LIVE_STREAMING_DETAILS);
+
+        
         return UriComponentsBuilder.fromHttpUrl(URL_VIDEO)
                 .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
                 .queryParam(PARAM_PART, PART_CONTENT_DETAILS + ", " +

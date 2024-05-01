@@ -25,16 +25,13 @@ public class VideoFetcher {
 
     public List<Video> fetchVideos(List<String> externalIds,
                                    VideoType videoType) {
-        StringBuilder builder = new StringBuilder();
-        externalIds.forEach(externalId -> builder.append(externalId).append(","));
-        String externalId = builder.toString();
-        return fetchVideo(externalId, videoType);
+        VideoList list = videoConnector.callVideo(externalId);
+        return buildVideo(list, externalId, videoType);
     }
 
     public List<Video> fetchVideo(String externalId,
-                            VideoType videoType) {
-        VideoList list = videoConnector.callVideo(externalId);
-        return buildVideo(list, externalId, videoType);
+                                  VideoType videoType) {
+
     }
 
     private List<Video> buildVideo(VideoList list,

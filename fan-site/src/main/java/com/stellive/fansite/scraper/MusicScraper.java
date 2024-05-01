@@ -1,32 +1,40 @@
 package com.stellive.fansite.scraper;
 
+import com.stellive.fansite.exceptions.ScraperException;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 
 import static com.stellive.fansite.utils.ScraperConst.*;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class MusicScraper {
 
     public List<String> scrapeMusicIds(ChromeDriver driver,
                                        WebDriverWait wait) {
-        driver.get(URL_MUSIC);
-        wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
-        driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
-        return parseMusic(driver, wait);
+        try {
+            driver.get(URL_MUSIC);
+            wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
+            driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
+            return parseMusic(driver, wait);
+        } catch (NoSuchElementException e) {
+            throw new ScraperException("Music not found", e);
+        } catch (TimeoutException e) {
+            throw new ScraperException("Music time out", e);
+        } catch (JavascriptException e) {
+            throw new ScraperException("Music javascript error", e);
+        } catch (Exception e) {
+            throw new ScraperException("Music unknown error", e);
+        }
     }
 
     private List<String> parseMusic(ChromeDriver driver,
