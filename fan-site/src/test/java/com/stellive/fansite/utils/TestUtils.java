@@ -11,6 +11,9 @@ import static com.stellive.fansite.utils.TestConst.*;
 
 public class TestUtils {
 
+    /**
+     * Channel
+     */
     public static ChannelList getChannelList() {
         return new ChannelList(List.of(getChannelItem()));
     }
@@ -33,6 +36,9 @@ public class TestUtils {
         return new ChannelBrandingSettings(getChannelImage());
     }
 
+    /**
+     * PlaylistItem
+     */
     public static PlaylistItemList getPlaylistItemListVideo(String nextPageToken) {
         return new PlaylistItemList(nextPageToken, List.of(getPlaylistItem()));
     }
@@ -52,12 +58,16 @@ public class TestUtils {
         return new PlaylistItemThumbnail(PLAYLIST_ITEM_THUMBNAIL_URL);
     }
 
+    /**
+     * Video
+     */
     public static VideoList getVideoList() {
         return new VideoList(List.of(getVideoItem()));
     }
     private static VideoItem getVideoItem() {
-        return new VideoItem(getVideoContentDetails(), getVideoLiveStreamingDetails(), getVideoSnippet(), getVideoStatistics());
+        return new VideoItem(getVideoContentDetails(), getVideoLiveStreamingDetails(), getVideoSnippet(), getVideoStatistics(), getVideoId());
     }
+
     private static VideoContentDetails getVideoContentDetails() {
         return new VideoContentDetails(VIDEO_DURATION);
     }
@@ -75,6 +85,9 @@ public class TestUtils {
     }
     private static VideoThumbnail getVideoThumbnail() {
         return new VideoThumbnail(VIDEO_THUMBNAIL_URL);
+    }
+    private static String getVideoId() {
+        return VIDEO_EXTERNAL_ID;
     }
 
 }

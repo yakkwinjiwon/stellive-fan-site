@@ -24,11 +24,12 @@ public class MusicScheduler {
     private final VideoRepo videoRepo;
 
     public List<Video> updateMusics(ChromeDriver driver,
-                                    WebDriverWait wait) {
+                                    WebDriverWait wait,
+                                    Integer limit) {
         log.info("Update Musics");
-        List<String> scrapedMusicIds = musicScraper.scrapeMusicIds(driver, wait);
+        List<String> scrapedMusicIds = musicScraper.scrapeMusicIds(driver, wait, limit);
         log.info("scraped MusicIds={}", scrapedMusicIds);
-        List<Video> fetchedVideos = videoFetcher.fetchVideos(scrapedMusicIds, VideoType.MUSIC);
+        List<Video> fetchedVideos = videoFetcher.fetchVideo(scrapedMusicIds, VideoType.MUSIC);
         List<Video> updatedMusics = videoRepo.save(fetchedVideos);
         log.info("updated Musics={}", updatedMusics);
         return updatedMusics;

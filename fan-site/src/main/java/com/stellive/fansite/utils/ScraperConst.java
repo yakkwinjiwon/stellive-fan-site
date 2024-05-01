@@ -39,7 +39,8 @@ public class ScraperConst {
     /**
      * Value
      */
-    public static final Integer NEWS_LIMIT = 8;
+    public static final Integer NEWS_LIMIT = 5;
+    public static final Integer MUSIC_LIMIT = 500;
 
     /**
      * Pattern

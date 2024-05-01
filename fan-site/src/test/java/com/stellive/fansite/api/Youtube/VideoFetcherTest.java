@@ -41,8 +41,9 @@ class VideoFetcherTest {
     void fetchVideo() {
         // given
         VideoList videoList = TestUtils.getVideoList();
-        when(videoConnector.callVideo(anyString())).thenReturn(videoList);
+        when(videoConnector.callVideo(anyList())).thenReturn(videoList);
 
+        List<String> externalIds = Arrays.asList(VIDEO_EXTERNAL_ID);
         Video video = Video.builder()
                 .externalId(VIDEO_EXTERNAL_ID)
                 .channel(channelRepo.findByExternalId(VIDEO_CHANNEL_ID).orElse(null))
@@ -58,7 +59,7 @@ class VideoFetcherTest {
         List<Video> videos = Arrays.asList(video);
 
         // when
-        List<Video> fetchedVideos = videoFetcher.fetchVideo(VIDEO_EXTERNAL_ID, VideoType.VIDEO);
+        List<Video> fetchedVideos = videoFetcher.fetchVideo(externalIds, VideoType.VIDEO);
 
         // then
         assertThat(fetchedVideos).isEqualTo(videos);

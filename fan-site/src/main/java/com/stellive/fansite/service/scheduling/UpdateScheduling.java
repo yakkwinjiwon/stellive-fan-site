@@ -1,5 +1,6 @@
 package com.stellive.fansite.service.scheduling;
 
+import com.stellive.fansite.utils.ScraperConst;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class UpdateScheduling {
         ChromeDriver driver = ScraperUtils.getDriver();
         WebDriverWait wait = ScraperUtils.getWait(driver);
 //        newsScheduler.updateNotices(driver, wait);
-        musicScheduler.updateMusics(driver, wait);
+        musicScheduler.updateMusics(driver, wait, ScraperConst.MUSIC_LIMIT);
         driver.quit();
 
     }

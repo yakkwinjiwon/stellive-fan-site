@@ -20,12 +20,13 @@ import static com.stellive.fansite.utils.ScraperConst.*;
 public class MusicScraper {
 
     public List<String> scrapeMusicIds(ChromeDriver driver,
-                                       WebDriverWait wait) {
+                                       WebDriverWait wait,
+                                       Integer limit) {
         try {
             driver.get(URL_MUSIC);
             wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
             driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
-            return parseMusic(driver, wait);
+            return parseMusic(driver, wait, limit);
         } catch (NoSuchElementException e) {
             throw new ScraperException("Music not found", e);
         } catch (TimeoutException e) {
@@ -38,11 +39,13 @@ public class MusicScraper {
     }
 
     private List<String> parseMusic(ChromeDriver driver,
-                                    WebDriverWait wait) {
+                                    WebDriverWait wait,
+                                    Integer limit) {
         wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_LIST)));
         List<WebElement> musicElements = driver.findElements(By.cssSelector(CSS_SELECTOR_MUSIC_LIST));
 
         return musicElements.stream()
+                .limit(limit)
                 .map(element -> scrapeMusicId(driver, wait, element))
                 .toList();
     }

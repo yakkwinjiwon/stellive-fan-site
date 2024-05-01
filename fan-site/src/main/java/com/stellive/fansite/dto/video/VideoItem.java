@@ -16,4 +16,5 @@ public class VideoItem {
     private VideoLiveStreamingDetails liveStreamingDetails;
     private VideoSnippet snippet;
     private VideoStatistics statistics;
+    private String id;
 }

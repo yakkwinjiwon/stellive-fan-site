@@ -37,7 +37,7 @@ public class VideoScheduler {
             removeExistingVideoIds(videoIds);
 
             VideoType videoType = youtubeChannel.isReplay() ? VideoType.REPLAY : VideoType.UNKNOWN;
-            List<Video> fetchedVideos = videoFetcher.fetchVideos(videoIds, videoType);
+            List<Video> fetchedVideos = videoFetcher.fetchVideo(videoIds, videoType);
             List<Video> updatedVideos = updateVideos(fetchedVideos);
 
             log.info("Updated Videos={}", updatedVideos);

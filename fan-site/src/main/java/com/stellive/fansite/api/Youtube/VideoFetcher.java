@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,24 +24,18 @@ public class VideoFetcher {
 
     private final ChannelRepo channelRepo;
 
-    public List<Video> fetchVideos(List<String> externalIds,
-                                   VideoType videoType) {
-        VideoList list = videoConnector.callVideo(externalId);
-        return buildVideo(list, externalId, videoType);
-    }
-
-    public List<Video> fetchVideo(String externalId,
+    public List<Video> fetchVideo(List<String> externalIds,
                                   VideoType videoType) {
-
+        VideoList list = videoConnector.callVideo(externalIds);
+        return buildVideo(list, videoType);
     }
 
     private List<Video> buildVideo(VideoList list,
-                                   String externalId,
                                    VideoType videoType) {
         List<VideoItem> items = getItems(list);
         return items.stream()
                 .map(item -> Video.builder()
-                        .externalId(externalId)
+                        .externalId(getId(item))
                         .channel(getChannel(item))
                         .duration(getDuration(item))
                         .scheduledStartTime(getScheduledStartTime(item))
@@ -55,6 +50,12 @@ public class VideoFetcher {
 
     }
 
+    private String getId(VideoItem item) {
+        return Optional.ofNullable(item)
+                .map(VideoItem::getId)
+                .orElse("");
+    }
+
     private Channel getChannel(VideoItem item) {
         String channelId = Optional.ofNullable(item)
                 .map(VideoItem::getSnippet)
@@ -66,7 +67,7 @@ public class VideoFetcher {
     private List<VideoItem> getItems(VideoList list) {
         return Optional.ofNullable(list)
                 .map(VideoList::getItems)
-                .orElse(null);
+                .orElse(new ArrayList<>());
     }
 
     private Long getDuration(VideoItem item) {
