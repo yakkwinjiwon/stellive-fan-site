@@ -29,6 +29,9 @@ public class ScraperConst {
     public static final String CSS_SELECTOR_MUSIC_LIST = ".bh_title a";
     public static final String CSS_SELECTOR_MUSIC_MORE = ".more_btn.ds-f.jc-c.hide";
     public static final String CSS_SELECTOR_MUSIC_IMG = ".youtube_converted img";
+    public static final String CSS_SELECTOR_LIVE_WAIT = ".channel_profile_wrapper__dU4fR";
+    public static final String CSS_SELECTOR_LIVE_BADGE = ".channel_profile_badge__qVsgg";
+
 
     /**
      * Attribute

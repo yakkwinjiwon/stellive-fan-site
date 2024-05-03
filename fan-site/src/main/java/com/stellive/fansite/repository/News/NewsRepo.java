@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NewsRepo {
 
-    List<News> save(List<News> notices);
+    List<News> saveAll(List<News> notices);
 
     List<News> findAll();
 }

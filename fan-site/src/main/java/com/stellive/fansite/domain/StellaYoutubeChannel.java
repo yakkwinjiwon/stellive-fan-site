@@ -3,12 +3,9 @@ package com.stellive.fansite.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
-public enum StellaChannel implements YoutubeChannel{
+public enum StellaYoutubeChannel implements YoutubeChannel{
 
     KANNA(11L, "UCKzfyYWHQ92z_2jUcSABM8Q"),
     KANNA_REPLAY(12L, "UC6CXZ-3mspWOXdxfpceumLw"),

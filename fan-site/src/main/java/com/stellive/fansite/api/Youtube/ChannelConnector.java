@@ -34,8 +34,9 @@ public class ChannelConnector {
     private URI getChannelUri(YoutubeChannel youtubeChannel) {
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
                 .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
-                .queryParam(PARAM_PART, PART_SNIPPET + ", " +
-                                PART_BRANDING_SETTINGS)
+                .queryParam(PARAM_PART, String.join(", ",
+                        PART_SNIPPET,
+                        PART_BRANDING_SETTINGS))
                 .queryParam(PARAM_ID, youtubeChannel.getChannelId())
                 .build().toUri();
     }

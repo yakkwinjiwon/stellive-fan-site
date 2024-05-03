@@ -15,7 +15,7 @@ public class NewsRepoImpl implements NewsRepo {
     private final NewsDataRepo noticeDataRepo;
 
     @Override
-    public List<News> save(List<News> notices) {
+    public List<News> saveAll(List<News> notices) {
         return noticeDataRepo.saveAll(notices);
     }
 

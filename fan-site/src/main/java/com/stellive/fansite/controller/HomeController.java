@@ -1,7 +1,7 @@
 package com.stellive.fansite.controller;
 
-import com.stellive.fansite.service.scheduling.ChannelScheduler;
-import com.stellive.fansite.service.scheduling.VideoScheduler;
+import com.stellive.fansite.service.scheduler.ChannelScheduler;
+import com.stellive.fansite.service.scheduler.VideoScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

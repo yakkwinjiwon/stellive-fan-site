@@ -30,6 +30,9 @@ public class Video {
     private String thumbnailUrl;
     private Instant publishTime;
     private Instant scheduledStartTime;
+    @Enumerated(EnumType.STRING)
     private VideoType videoType;
+    @Enumerated(EnumType.STRING)
     private LiveStatus liveStatus;
+
 }

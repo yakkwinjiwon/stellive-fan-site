@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -22,25 +23,11 @@ public class MusicScraper {
     public List<String> scrapeMusicIds(ChromeDriver driver,
                                        WebDriverWait wait,
                                        Integer limit) {
-        try {
-            driver.get(URL_MUSIC);
-            wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
-            driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
-            return parseMusic(driver, wait, limit);
-        } catch (NoSuchElementException e) {
-            throw new ScraperException("Music not found", e);
-        } catch (TimeoutException e) {
-            throw new ScraperException("Music time out", e);
-        } catch (JavascriptException e) {
-            throw new ScraperException("Music javascript error", e);
-        } catch (Exception e) {
-            throw new ScraperException("Music unknown error", e);
-        }
-    }
+        driver.get(URL_MUSIC);
 
-    private List<String> parseMusic(ChromeDriver driver,
-                                    WebDriverWait wait,
-                                    Integer limit) {
+        wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
+        driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
+
         wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_LIST)));
         List<WebElement> musicElements = driver.findElements(By.cssSelector(CSS_SELECTOR_MUSIC_LIST));
 

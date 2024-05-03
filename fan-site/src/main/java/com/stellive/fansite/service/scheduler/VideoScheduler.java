@@ -1,4 +1,4 @@
-package com.stellive.fansite.service.scheduling;
+package com.stellive.fansite.service.scheduler;
 
 import com.stellive.fansite.api.Youtube.PlaylistItemFetcher;
 import com.stellive.fansite.api.Youtube.VideoFetcher;
@@ -37,7 +37,7 @@ public class VideoScheduler {
             removeExistingVideoIds(videoIds);
 
             VideoType videoType = youtubeChannel.isReplay() ? VideoType.REPLAY : VideoType.UNKNOWN;
-            List<Video> fetchedVideos = videoFetcher.fetchVideo(videoIds, videoType);
+            List<Video> fetchedVideos = videoFetcher.fetchVideos(videoIds, videoType);
             List<Video> updatedVideos = updateVideos(fetchedVideos);
 
             log.info("Updated Videos={}", updatedVideos);

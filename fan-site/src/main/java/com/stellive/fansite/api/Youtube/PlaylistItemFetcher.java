@@ -40,8 +40,8 @@ public class PlaylistItemFetcher {
     }
 
     public VideoResult fetchPlaylistItem(String playlistId,
-                                     Integer maxResults,
-                                     String nextPageToken) {
+                                         Integer maxResults,
+                                         String nextPageToken) {
         PlaylistItemList list = playlistItemConnector.callPlaylistItem(playlistId, maxResults, nextPageToken);
         return buildVideoResponse(list);
     }

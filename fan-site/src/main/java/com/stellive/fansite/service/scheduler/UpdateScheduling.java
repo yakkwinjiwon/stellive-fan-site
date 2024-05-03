@@ -1,6 +1,5 @@
-package com.stellive.fansite.service.scheduling;
+package com.stellive.fansite.service.scheduler;
 
-import com.stellive.fansite.utils.ScraperConst;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +19,7 @@ public class UpdateScheduling {
     private final VideoScheduler videoScheduler;
     private final NewsScheduler newsScheduler;
     private final MusicScheduler musicScheduler;
+    private final LiveScheduler liveScheduler;
 
     /**
      *  데이터 전부 갱신
@@ -35,13 +35,14 @@ public class UpdateScheduling {
 //    @Scheduled(cron = "* */10 * * * ?")
     public void updateRecent() {
         log.info("Update recent");
-//        channelScheduler.updateChannels();
+        channelScheduler.updateChannels();
 //        videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
 
         ChromeDriver driver = ScraperUtils.getDriver();
         WebDriverWait wait = ScraperUtils.getWait(driver);
 //        newsScheduler.updateNotices(driver, wait);
-        musicScheduler.updateMusics(driver, wait, ScraperConst.MUSIC_LIMIT);
+//        musicScheduler.updateMusics(driver, wait, ScraperConst.MUSIC_LIMIT);
+        liveScheduler.updateLives(driver, wait);
         driver.quit();
 
     }

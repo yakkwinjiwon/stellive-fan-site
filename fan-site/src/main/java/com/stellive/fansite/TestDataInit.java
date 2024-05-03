@@ -1,8 +1,8 @@
 package com.stellive.fansite;
 
-import com.stellive.fansite.service.scheduling.ChannelScheduler;
-import com.stellive.fansite.service.scheduling.NewsScheduler;
-import com.stellive.fansite.service.scheduling.VideoScheduler;
+import com.stellive.fansite.service.scheduler.ChannelScheduler;
+import com.stellive.fansite.service.scheduler.NewsScheduler;
+import com.stellive.fansite.service.scheduler.VideoScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

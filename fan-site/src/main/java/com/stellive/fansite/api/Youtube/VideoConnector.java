@@ -29,7 +29,6 @@ public class VideoConnector {
             backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
     public VideoList callVideo(List<String> externalIds) {
         URI uri = getVideoUri(externalIds);
-
         return restTemplate.getForEntity(uri, VideoList.class).getBody();
     }
 
@@ -43,7 +42,7 @@ public class VideoConnector {
                         PART_STATISTICS,
                         PART_LIVE_STREAMING_DETAILS));
         externalIds.forEach(id -> builder.queryParam(PARAM_ID, id));
-        
+
         return builder.build().toUri();
     }
 

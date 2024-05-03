@@ -1,4 +1,4 @@
-package com.stellive.fansite.service.scheduling;
+package com.stellive.fansite.service.scheduler;
 
 import com.stellive.fansite.api.Youtube.ChannelFetcher;
 import com.stellive.fansite.domain.Channel;

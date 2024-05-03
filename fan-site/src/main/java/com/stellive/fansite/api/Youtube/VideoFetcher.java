@@ -1,8 +1,10 @@
 package com.stellive.fansite.api.Youtube;
 
 import com.stellive.fansite.domain.*;
+import com.stellive.fansite.dto.etc.VideoResult;
 import com.stellive.fansite.dto.video.*;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
+import com.stellive.fansite.utils.ApiConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.stellive.fansite.utils.ApiConst.*;
 import static com.stellive.fansite.utils.AppConst.*;
 
 @Service
@@ -24,6 +27,19 @@ public class VideoFetcher {
 
     private final ChannelRepo channelRepo;
 
+
+    public List<Video> fetchVideos(List<String> externalIds,
+                                   VideoType videoType){
+        List<Video> videos = new ArrayList<>();
+
+        for(int i = 0; i < externalIds.size(); i += MAX_RESULTS_ALL){
+            List<String> subList = externalIds.subList(i, Math.min(i + MAX_RESULTS_ALL, externalIds.size()));
+            List<Video> fetchedVideos = fetchVideo(subList, videoType);
+            videos.addAll(fetchedVideos);
+        }
+
+        return videos;
+    }
     public List<Video> fetchVideo(List<String> externalIds,
                                   VideoType videoType) {
         VideoList list = videoConnector.callVideo(externalIds);

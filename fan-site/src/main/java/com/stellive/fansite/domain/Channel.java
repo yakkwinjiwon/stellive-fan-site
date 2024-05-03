@@ -17,12 +17,13 @@ public class Channel {
     @Id
     private Long id;
 
-    @OneToMany(mappedBy = "channel")
-    private List<Video> videos;
-
     private String externalId;
     private String handle;
     private String thumbnailUrl;
     private String bannerUrl;
 
+    @OneToMany(mappedBy = "channel")
+    private List<Video> videos;
+    @OneToOne(mappedBy = "channel")
+    private Live live;
 }

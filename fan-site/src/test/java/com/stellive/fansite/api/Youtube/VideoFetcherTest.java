@@ -59,7 +59,7 @@ class VideoFetcherTest {
         List<Video> videos = Arrays.asList(video);
 
         // when
-        List<Video> fetchedVideos = videoFetcher.fetchVideo(externalIds, VideoType.VIDEO);
+        List<Video> fetchedVideos = videoFetcher.fetchVideos(externalIds, VideoType.VIDEO);
 
         // then
         assertThat(fetchedVideos).isEqualTo(videos);
