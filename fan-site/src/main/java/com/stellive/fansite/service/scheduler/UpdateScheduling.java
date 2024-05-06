@@ -42,7 +42,7 @@ public class UpdateScheduling {
         WebDriverWait wait = ScraperUtils.getWait(driver);
 //        newsScheduler.updateNotices(driver, wait);
 //        musicScheduler.updateMusics(driver, wait, ScraperConst.MUSIC_LIMIT);
-        liveScheduler.updateLives(driver, wait);
+//        liveScheduler.updateLives(driver, wait);
         driver.quit();
 
     }
