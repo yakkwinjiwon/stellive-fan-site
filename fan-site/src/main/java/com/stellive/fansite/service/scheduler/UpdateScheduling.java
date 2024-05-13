@@ -31,12 +31,12 @@ public class UpdateScheduling {
 
     }
 
-    @Scheduled(cron = "*/5 * * * * ?")
+    @Scheduled(cron = "*/10 * * * * ?")
 //    @Scheduled(cron = "* */10 * * * ?")
     public void updateRecent() {
         log.info("Update recent");
         channelScheduler.updateChannels();
-//        videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
+        videoScheduler.updateVideos(MAX_RESULTS_VIDEO);
 
         ChromeDriver driver = ScraperUtils.getDriver();
         WebDriverWait wait = ScraperUtils.getWait(driver);

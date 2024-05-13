@@ -1,5 +1,6 @@
 package com.stellive.fansite.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,9 @@ public class Channel {
     private String bannerUrl;
 
     @OneToMany(mappedBy = "channel")
+    @JsonIgnore
     private List<Video> videos;
     @OneToOne(mappedBy = "channel")
+    @JsonIgnore
     private Live live;
 }

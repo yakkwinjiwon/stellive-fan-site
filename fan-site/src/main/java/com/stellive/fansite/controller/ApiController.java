@@ -1,9 +1,9 @@
 package com.stellive.fansite.controller;
 
 import com.stellive.fansite.domain.Channel;
-import com.stellive.fansite.service.scheduler.ChannelScheduler;
-import com.stellive.fansite.service.scheduler.VideoScheduler;
+import com.stellive.fansite.domain.Video;
 import com.stellive.fansite.service.service.ChannelService;
+import com.stellive.fansite.service.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,15 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("")
 @Slf4j
-public class HomeController {
+public class ApiController {
 
     private final ChannelService channelService;
+    private final VideoService videoService;
 
     @GetMapping("/")
     public String home() {
         log.info("home");
-
-
         return "ok";
     }
 
@@ -36,5 +35,12 @@ public class HomeController {
 
         return channelService.findAll();
     }
+
+    @GetMapping("/api/videos/all")
+    public List<Video> videosAll() {
+        log.info("videosAll");
+        return videoService.findAll();
+    }
+
 
 }

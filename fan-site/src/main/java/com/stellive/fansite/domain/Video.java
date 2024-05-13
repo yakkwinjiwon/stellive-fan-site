@@ -1,6 +1,7 @@
 package com.stellive.fansite.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class Video {
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
+    @JsonIgnore
     private Channel channel;
 
     private Long duration;

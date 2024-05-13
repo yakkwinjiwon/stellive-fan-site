@@ -1,5 +1,6 @@
 package com.stellive.fansite.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -20,6 +21,7 @@ public class Live {
 
     @OneToOne
     @JoinColumn(name = "channel_id")
+    @JsonIgnore
     private Channel channel;
 
     private Boolean isLive;
