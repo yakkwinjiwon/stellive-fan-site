@@ -3,6 +3,7 @@ package com.stellive.fansite.utils;
 import com.stellive.fansite.domain.ChzzkChannel;
 import com.stellive.fansite.domain.StellaChzzkChannel;
 import com.stellive.fansite.exceptions.ScraperException;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ import java.util.function.Consumer;
 
 import static com.stellive.fansite.utils.ScraperConst.*;
 
+@Slf4j
 public class ScraperUtils {
 
     public static WebDriver getDriver() {

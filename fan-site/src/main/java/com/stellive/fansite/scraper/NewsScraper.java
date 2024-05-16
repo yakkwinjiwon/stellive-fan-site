@@ -17,7 +17,6 @@ import java.util.NoSuchElementException;
 import static com.stellive.fansite.utils.ScraperConst.*;
 
 @Service
-@Slf4j
 public class NewsScraper {
 
     public List<News> scrapeNews(WebDriver driver,

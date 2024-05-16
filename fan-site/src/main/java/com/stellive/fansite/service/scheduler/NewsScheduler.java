@@ -31,9 +31,11 @@ public class NewsScheduler {
         ScraperUtils.executeWithHandling(() -> {
             scrapedNews.addAll(newsScraper.scrapeNews(driver, wait, limit));
         });
+        log.info("scraped News={}, size={}", scrapedNews.getFirst(), scrapedNews.size());
 
         List<News> updatedNews = newsRepo.saveAll(scrapedNews);
-        log.info("updated News={}", updatedNews);
+        log.info("updated News={}, size={}", updatedNews.getFirst(), updatedNews.size());
+
         return updatedNews;
     }
 }

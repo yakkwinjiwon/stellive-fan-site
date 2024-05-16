@@ -11,7 +11,6 @@ import org.springframework.web.client.RestClientException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<String> handleRestClientException(RestClientException e) {
         log.error("Error calling API", e);

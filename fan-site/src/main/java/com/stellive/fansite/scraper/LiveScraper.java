@@ -20,7 +20,6 @@ import static com.stellive.fansite.utils.ScraperConst.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LiveScraper {
 
     private final ChannelRepo channelRepo;

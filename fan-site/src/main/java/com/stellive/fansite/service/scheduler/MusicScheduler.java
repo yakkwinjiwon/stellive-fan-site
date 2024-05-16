@@ -37,10 +37,10 @@ public class MusicScheduler {
         log.info("scraped MusicIds={}", scrapedMusicIds);
 
         List<Video> fetchedVideos = videoFetcher.fetchVideos(scrapedMusicIds, VideoType.MUSIC);
-        log.info("fetched Videos={}", fetchedVideos);
+        log.info("fetched Videos={}, size={}", fetchedVideos.getFirst(), fetchedVideos.size());
 
         List<Video> updatedMusics = videoRepo.save(fetchedVideos);
-        log.info("updated Musics={}", updatedMusics);
+        log.info("updated Musics={}, size={}", updatedMusics.getFirst(), updatedMusics.size());
         return updatedMusics;
 
     }

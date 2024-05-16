@@ -40,7 +40,7 @@ public class VideoScheduler {
             List<Video> fetchedVideos = videoFetcher.fetchVideos(videoIds, videoType);
             List<Video> updatedVideos = updateVideos(fetchedVideos);
 
-            log.info("Updated Videos={}", updatedVideos);
+            log.info("Updated Videos={}, size={}", updatedVideos.getFirst(), updatedVideos.size());
             videos.addAll(updatedVideos);
         });
         return videos;

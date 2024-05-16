@@ -31,7 +31,7 @@ public class ScraperConst {
     public static final String CSS_SELECTOR_NEWS_PUBLISH_TIME = ".bh_content .ff-nn";
     public static final String CSS_SELECTOR_MUSIC_LIST = ".bh_title a";
     public static final String CSS_SELECTOR_MUSIC_MORE = ".more_btn";
-    public static final String CSS_SELECTOR_MUSIC_IMG = ".youtube _converted img";
+    public static final String CSS_SELECTOR_MUSIC_LINK = ".youtube_converted img";
     public static final String CSS_SELECTOR_LIVE_WAIT = ".channel_profile_wrapper__dU4fR";
     public static final String CSS_SELECTOR_LIVE_BADGE = ".channel_profile_badge__qVsgg";
 

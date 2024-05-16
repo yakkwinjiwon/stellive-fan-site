@@ -24,7 +24,7 @@ public class DataUpdater {
     private final MusicScheduler musicScheduler;
     private final LiveScheduler liveScheduler;
 
-    @Scheduled(cron = "*/10 * * * * ?")
+//    @Scheduled(cron = "*/10 * * * * ?")
     public void updateRecent() {
         log.info("Update recent");
 
