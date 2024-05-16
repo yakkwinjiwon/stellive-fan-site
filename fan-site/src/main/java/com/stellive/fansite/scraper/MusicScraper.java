@@ -5,7 +5,7 @@ import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import static com.stellive.fansite.utils.ScraperConst.*;
 @Slf4j
 public class MusicScraper {
 
-    public List<String> scrapeMusicIds(ChromeDriver driver,
+    public List<String> scrapeMusicIds(WebDriver driver,
                                        WebDriverWait wait,
                                        Integer limit) {
         driver.get(URL_MUSIC);
@@ -37,7 +37,7 @@ public class MusicScraper {
                 .toList();
     }
 
-    private String scrapeMusicId(ChromeDriver driver,
+    private String scrapeMusicId(WebDriver driver,
                                  WebDriverWait wait,
                                  WebElement element) {
         element.sendKeys(Keys.CONTROL, Keys.RETURN);

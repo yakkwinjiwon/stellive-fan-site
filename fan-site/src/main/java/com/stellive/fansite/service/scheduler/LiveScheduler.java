@@ -6,7 +6,7 @@ import com.stellive.fansite.scraper.LiveScraper;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class LiveScheduler {
 
     private final LiveRepo liveRepo;
 
-    public List<Live> updateLives(ChromeDriver driver,
+    public List<Live> updateLives(WebDriver driver,
                                   WebDriverWait wait) {
         log.info("update Lives");
         List<Live> scrapedLives = new ArrayList<>();

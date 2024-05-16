@@ -8,8 +8,10 @@ public class ScraperConst {
     /**
      * Driver config
      */
-    public static final String CHROME_DRIVER_KEY = "webdriver.chrome.driver";
-    public static final String CHROME_DRIVER_PATH = "C:\\chromedriver-win32\\chromedriver.exe";
+    public static final String DRIVER_KEY = "webdriver.gecko.driver";
+    public static final String DRIVER_PATH = "C:\\geckodriver\\geckodriver.exe";
+    public static final String BROWSER_PATH = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+
     public static final Duration WAIT_TIMEOUT = Duration.ofSeconds(5);
 
     /**
@@ -21,14 +23,15 @@ public class ScraperConst {
     /**
      * CSS SELECTOR
      */
+    public static final String CSS_SELECTOR_NEWS_MORE = ".more_btn";
     public static final String CSS_SELECTOR_NEWS_LIST = ".bh.bh_item.item";
     public static final String CSS_SELECTOR_NEWS_URL = ".bh_img_content a";
     public static final String CSS_SELECTOR_NEWS_IMG_URL = ".bh_img_content a img";
     public static final String CSS_SELECTOR_NEWS_TITLE = ".bh_title.ff-nn .title span";
     public static final String CSS_SELECTOR_NEWS_PUBLISH_TIME = ".bh_content .ff-nn";
     public static final String CSS_SELECTOR_MUSIC_LIST = ".bh_title a";
-    public static final String CSS_SELECTOR_MUSIC_MORE = ".more_btn.ds-f.jc-c.hide";
-    public static final String CSS_SELECTOR_MUSIC_IMG = ".youtube_converted img";
+    public static final String CSS_SELECTOR_MUSIC_MORE = ".more_btn";
+    public static final String CSS_SELECTOR_MUSIC_IMG = ".youtube _converted img";
     public static final String CSS_SELECTOR_LIVE_WAIT = ".channel_profile_wrapper__dU4fR";
     public static final String CSS_SELECTOR_LIVE_BADGE = ".channel_profile_badge__qVsgg";
 
@@ -43,7 +46,9 @@ public class ScraperConst {
      * Value
      */
     public static final Integer NEWS_LIMIT = 5;
-    public static final Integer MUSIC_LIMIT = 500;
+    public static final Integer NEWS_ALL = 500;
+    public static final Integer MUSIC_LIMIT = 5;
+    public static final Integer MUSIC_ALL = 500;
 
     /**
      * Pattern

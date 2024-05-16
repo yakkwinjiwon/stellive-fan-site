@@ -5,11 +5,7 @@ import com.stellive.fansite.exceptions.ScraperException;
 import com.stellive.fansite.utils.AppUtils;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +20,19 @@ import static com.stellive.fansite.utils.ScraperConst.*;
 @Slf4j
 public class NewsScraper {
 
-    public List<News> scrapeNews(ChromeDriver driver,
-                                 WebDriverWait wait) {
+    public List<News> scrapeNews(WebDriver driver,
+                                 WebDriverWait wait,
+                                 Integer limit) {
         driver.get(URL_NEWS);
+
+        wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_NEWS_MORE)));
+        driver.findElement(By.cssSelector(CSS_SELECTOR_NEWS_MORE)).click();
 
         wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_NEWS_LIST)));
         List<WebElement> newsElements = driver.findElements(By.cssSelector(CSS_SELECTOR_NEWS_LIST));
 
         return newsElements.stream()
-                .limit(NEWS_LIMIT)
+                .limit(limit)
                 .map(this::buildNews)
                 .toList();
     }

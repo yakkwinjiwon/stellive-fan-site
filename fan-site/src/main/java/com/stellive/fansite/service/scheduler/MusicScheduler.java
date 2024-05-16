@@ -8,7 +8,7 @@ import com.stellive.fansite.scraper.MusicScraper;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class MusicScheduler {
 
     private final VideoRepo videoRepo;
 
-    public List<Video> updateMusics(ChromeDriver driver,
+    public List<Video> updateMusics(WebDriver driver,
                                     WebDriverWait wait,
                                     Integer limit) {
         log.info("Update Musics");

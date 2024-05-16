@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class LiveScraper {
 
     private final ChannelRepo channelRepo;
 
-    public Live scrapeLive(ChromeDriver driver,
+    public Live scrapeLive(WebDriver driver,
                            WebDriverWait wait,
                            ChzzkChannel chzzkChannel) {
         driver.get(chzzkChannel.getUrl());

@@ -6,7 +6,7 @@ import com.stellive.fansite.repository.News.NewsRepo;
 import com.stellive.fansite.utils.ScraperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +22,14 @@ public class NewsScheduler {
 
     private final NewsRepo newsRepo;
 
-    public List<News> updateNews(ChromeDriver driver,
-                                 WebDriverWait wait) {
+    public List<News> updateNews(WebDriver driver,
+                                 WebDriverWait wait,
+                                 Integer limit) {
         log.info("update News");
 
         List<News> scrapedNews = new ArrayList<>();
         ScraperUtils.executeWithHandling(() -> {
-            scrapedNews.addAll(newsScraper.scrapeNews(driver, wait));
+            scrapedNews.addAll(newsScraper.scrapeNews(driver, wait, limit));
         });
 
         List<News> updatedNews = newsRepo.saveAll(scrapedNews);
