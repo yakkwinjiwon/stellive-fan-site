@@ -7,6 +7,8 @@ import com.stellive.fansite.utils.ScraperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -14,11 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.stellive.fansite.utils.ApiConst.*;
+import static com.stellive.fansite.utils.ApiConst.MAX_DELAY;
 import static com.stellive.fansite.utils.ScraperConst.*;
 
 @Service
 public class NewsScraper {
 
+    @Retryable(value = {TimeoutException.class}, maxAttempts = MAX_ATTEMPTS,
+            backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER, maxDelay = MAX_DELAY))
     public List<News> scrapeNews(WebDriver driver,
                                  WebDriverWait wait,
                                  Integer limit) {
@@ -37,17 +43,22 @@ public class NewsScraper {
     }
 
     private News buildNews(WebElement element) {
-        String url = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_URL)).getAttribute(ATTRIBUTE_HREF);
-        String imgUrl = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_IMG_URL)).getAttribute(ATTRIBUTE_SRC);
-        String title = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_TITLE)).getText();
-        String publishTimeString = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_PUBLISH_TIME)).getText();
-        Instant publishTime = AppUtils.stringToInstant(publishTimeString, "yyyy.MM.dd");
-        return News.builder()
-                .url(url)
-                .imgUrl(imgUrl)
-                .title(title)
-                .publishTime(publishTime)
-                .build();
+        try{
+            String url = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_URL)).getAttribute(ATTRIBUTE_HREF);
+            String imgUrl = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_IMG_URL)).getAttribute(ATTRIBUTE_SRC);
+            String title = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_TITLE)).getText();
+            String publishTimeString = element.findElement(By.cssSelector(CSS_SELECTOR_NEWS_PUBLISH_TIME)).getText();
+            Instant publishTime = AppUtils.stringToInstant(publishTimeString, "yyyy.MM.dd");
+            return News.builder()
+                    .url(url)
+                    .imgUrl(imgUrl)
+                    .title(title)
+                    .publishTime(publishTime)
+                    .build();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
     }
 
 }

@@ -8,5 +8,4 @@ public interface YoutubeChannel {
     String getChannelId();
     Boolean isReplay();
 
-
 }

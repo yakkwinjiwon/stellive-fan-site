@@ -18,7 +18,6 @@ import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PlaylistItemConnector {
 
     private final RestTemplate restTemplate;

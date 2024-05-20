@@ -20,6 +20,14 @@ public enum StellaYoutubeChannel implements YoutubeChannel{
     LIZE_REPLAY(52L,"UC5qsIJIixQI5k2FfkW1j1NQ"),
     TABI(61L,"UCAHVQ44O81aehLWfy9O6Elw"),
     TABI_REPLAY(62L,"UCOAD3RLV7uC3uc39ok7NLyg"),
+    SHIBUKI(71L, "UCYxLMfeX1CbMBll9MsGlzmw"),
+    SHIBUKI_REPLAY(72L, "UCfoPMrULJvdKN8GlBZJwqHg"),
+    RIN(81L, "UCQmcltnre6aG9SkDRYZqFIg"),
+    RIN_REPLAY(82L, "UCmw0eKk5uOv029SScRRRfqw"),
+    NANA(91L, "UCcA21_PzN1EhNe7xS4MJGsQ"),
+    NANA_REPLAY(92L, "UCmmzr9DL0_t5ui1TAZjv-nA"),
+    RIKO(101L, "UCj0c1jUr91dTetIQP2pFeLA"),
+    RIKO_REPLAY(102L, "UCVZcw2SMyL6h5CfKSCs42_A"),
     OFFICIAL(1001L, "UC2b4WRE5BZ6SIUWBeJU8rwg");
 
     private final Long id;

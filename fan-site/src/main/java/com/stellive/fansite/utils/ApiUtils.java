@@ -18,7 +18,7 @@ public class ApiUtils {
     public static void executeForEachChannel(Consumer<YoutubeChannel> channelOperation) {
         Arrays.stream(StellaYoutubeChannel.values())
                 .forEach(youtubeChannel ->
-                    executeWithHandling(() -> channelOperation.accept(youtubeChannel))
+                        executeWithHandling(() -> channelOperation.accept(youtubeChannel))
                 );
     }
 

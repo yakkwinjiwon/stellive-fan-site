@@ -14,12 +14,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class VideoConnector {
 
     private final RestTemplate restTemplate;
@@ -36,7 +36,7 @@ public class VideoConnector {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL_VIDEO)
                 .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
                 .queryParam(PARAM_MAX_RESULTS, MAX_RESULTS_ALL)
-                .queryParam(PARAM_PART, String.join(", ",
+                .queryParam(PARAM_PART, String.join(PART_DELIMITER,
                         PART_CONTENT_DETAILS,
                         PART_SNIPPET,
                         PART_STATISTICS,

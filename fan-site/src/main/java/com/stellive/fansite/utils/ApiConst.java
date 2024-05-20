@@ -9,7 +9,6 @@ public class ApiConst {
     public static final String URL_PLAYLIST_ITEMS = "https://www.googleapis.com/youtube/v3/playlistItems";
     public static final String URL_VIDEO = "https://www.googleapis.com/youtube/v3/videos";
 
-
     /**
      * Parameter key
      */
@@ -23,10 +22,10 @@ public class ApiConst {
     public static final String PARAM_MAX_RESULTS = "maxResults";
     public static final String PARAM_PAGE_TOKEN = "pageToken";
 
-
     /**
      * Part value
      */
+    public static final String PART_DELIMITER = ", ";
     public static final String PART_SNIPPET = "snippet";
     public static final String PART_CONTENT_DETAILS = "contentDetails";
     public static final String PART_BRANDING_SETTINGS = "brandingSettings";
@@ -56,7 +55,7 @@ public class ApiConst {
     /**
      * Retryable value
      */
-    public static final int MAX_ATTEMPTS = 3;
+    public static final int MAX_ATTEMPTS = 2;
     public static final int DELAY = 1000;
     public static final int MULTIPLIER = 2;
     public static final int MAX_DELAY = 10000;

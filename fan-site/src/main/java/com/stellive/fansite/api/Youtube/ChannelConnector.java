@@ -18,7 +18,6 @@ import static com.stellive.fansite.utils.ApiConst.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ChannelConnector {
 
     private final RestTemplate restTemplate;
@@ -34,7 +33,7 @@ public class ChannelConnector {
     private URI getChannelUri(YoutubeChannel youtubeChannel) {
         return UriComponentsBuilder.fromHttpUrl(URL_CHANNEL)
                 .queryParam(PARAM_KEY, keyManager.getYoutubeApiKey())
-                .queryParam(PARAM_PART, String.join(", ",
+                .queryParam(PARAM_PART, String.join(PART_DELIMITER,
                         PART_SNIPPET,
                         PART_BRANDING_SETTINGS))
                 .queryParam(PARAM_ID, youtubeChannel.getChannelId())

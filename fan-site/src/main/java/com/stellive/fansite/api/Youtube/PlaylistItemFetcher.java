@@ -2,19 +2,21 @@ package com.stellive.fansite.api.Youtube;
 
 import com.stellive.fansite.dto.etc.VideoResult;
 import com.stellive.fansite.dto.playlistitem.*;
+import com.stellive.fansite.utils.AppConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.stellive.fansite.utils.ApiConst.*;
+import static com.stellive.fansite.utils.AppConst.*;
 
-@Component
+@Service
 @RequiredArgsConstructor
-@Slf4j
 public class PlaylistItemFetcher {
 
     private final PlaylistItemConnector playlistItemConnector;
@@ -60,8 +62,7 @@ public class PlaylistItemFetcher {
     }
 
     private List<String> getVideoIds(PlaylistItemList list) {
-        List<PlaylistItemItem> items = getItems(list);
-        return items.stream()
+        return getItems(list).stream()
                 .filter(this::isThumbnailPresent)
                 .map(this::getVideoId)
                 .toList();
@@ -72,13 +73,7 @@ public class PlaylistItemFetcher {
                 .map(PlaylistItemItem::getSnippet)
                 .map(PlaylistItemSnippet::getResourceId)
                 .map(PlaylistItemResourceId::getVideoId)
-                .orElse("");
-    }
-
-    private PlaylistItemSnippet getSnippet(PlaylistItemItem item) {
-        return Optional.ofNullable(item)
-                .map(PlaylistItemItem::getSnippet)
-                .orElse(null);
+                .orElse(STRING_DEFAULT);
     }
 
     private boolean isThumbnailPresent(PlaylistItemItem item) {
@@ -94,6 +89,5 @@ public class PlaylistItemFetcher {
                 .map(PlaylistItemList::getItems)
                 .orElse(new ArrayList<>());
     }
-
 
 }

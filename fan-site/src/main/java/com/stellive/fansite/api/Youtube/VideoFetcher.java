@@ -5,6 +5,7 @@ import com.stellive.fansite.dto.etc.VideoResult;
 import com.stellive.fansite.dto.video.*;
 import com.stellive.fansite.repository.Channel.ChannelRepo;
 import com.stellive.fansite.utils.ApiConst;
+import com.stellive.fansite.utils.AppConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ import static com.stellive.fansite.utils.AppConst.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class VideoFetcher {
 
     private final VideoConnector videoConnector;
@@ -48,8 +48,7 @@ public class VideoFetcher {
 
     private List<Video> buildVideo(VideoList list,
                                    VideoType videoType) {
-        List<VideoItem> items = getItems(list);
-        return items.stream()
+        return getItems(list).stream()
                 .map(item -> Video.builder()
                         .externalId(getId(item))
                         .channel(getChannel(item))
@@ -69,14 +68,14 @@ public class VideoFetcher {
     private String getId(VideoItem item) {
         return Optional.ofNullable(item)
                 .map(VideoItem::getId)
-                .orElse("");
+                .orElse(STRING_DEFAULT);
     }
 
     private Channel getChannel(VideoItem item) {
         String channelId = Optional.ofNullable(item)
                 .map(VideoItem::getSnippet)
                 .map(VideoSnippet::getChannelId)
-                .orElse("");
+                .orElse(STRING_DEFAULT);
         return channelRepo.findByExternalId(channelId).orElse(null);
     }
 
@@ -114,21 +113,21 @@ public class VideoFetcher {
         return Optional.ofNullable(item)
                 .map(VideoItem::getSnippet)
                 .map(VideoSnippet::getChannelId)
-                .orElse("");
+                .orElse(STRING_DEFAULT);
     }
 
     private String getTitle(VideoItem item) {
         return Optional.ofNullable(item)
                 .map(VideoItem::getSnippet)
                 .map(VideoSnippet::getTitle)
-                .orElse("");
+                .orElse(STRING_DEFAULT);
     }
 
     private LiveStatus getLiveStatus(VideoItem item) {
         String liveBroadcastContent = Optional.ofNullable(item)
                 .map(VideoItem::getSnippet)
                 .map(VideoSnippet::getLiveBroadcastContent)
-                .orElse("");
+                .orElse(STRING_DEFAULT);
         return LiveStatus.fromString(liveBroadcastContent);
     }
 
@@ -138,7 +137,7 @@ public class VideoFetcher {
                 .map(VideoSnippet::getThumbnails)
                 .map(VideoThumbnails::getHigh)
                 .map(VideoThumbnail::getUrl)
-                .orElse("");
+                .orElse(STRING_DEFAULT);
     }
 
     private Integer getViewCount(VideoItem item) {

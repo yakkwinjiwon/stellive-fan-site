@@ -1,5 +1,8 @@
-package com.stellive.fansite.exceptions;
+package com.stellive.fansite.exceptions.handler;
 
+import com.stellive.fansite.exceptions.ApiResponseException;
+import com.stellive.fansite.exceptions.EmptyItemException;
+import com.stellive.fansite.exceptions.ResponseParsingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +12,20 @@ import org.springframework.web.client.RestClientException;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class ApiExceptionHandler {
 
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<String> handleRestClientException(RestClientException e) {
         log.error("Error calling API", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error calling API");
+    }
+
+    @ExceptionHandler(EmptyItemException.class)
+    public ResponseEntity<String> handleEmptyItemException(EmptyItemException e) {
+        log.error("Empty item error=", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Empty item error");
     }
 
     @ExceptionHandler(ApiResponseException.class)
