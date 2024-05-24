@@ -26,15 +26,15 @@ public class DataInitializer {
     @EventListener(ApplicationReadyEvent.class)
     public void initAll() {
         log.info("Initialize");
-//
-//        channelScheduler.updateChannels();
-//        videoScheduler.updateVideos(ApiConst.MAX_RESULTS_ALL);
+
+        channelScheduler.updateChannels();
+        videoScheduler.updateVideos(ApiConst.MAX_RESULTS_ALL);
 
         WebDriver driver = ScraperUtils.getDriver();
         WebDriverWait wait = ScraperUtils.getWait(driver);
-//        newsScheduler.updateNews(driver, wait, ScraperConst.NEWS_ALL);
+        newsScheduler.updateNews(driver, wait, ScraperConst.NEWS_ALL);
         musicScheduler.updateMusics(driver, wait, ScraperConst.MUSIC_ALL);
-//        liveScheduler.updateLives(driver, wait);
+        liveScheduler.updateLives(driver, wait);
         driver.quit();
     }
 }

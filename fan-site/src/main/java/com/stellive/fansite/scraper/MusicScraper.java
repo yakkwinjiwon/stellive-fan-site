@@ -27,8 +27,6 @@ public class MusicScraper {
                                        WebDriverWait wait,
                                        Integer limit) {
         driver.get(URL_MUSIC);
-        System.out.println("abc");
-        wait.until(webDriver -> webDriver.findElement(By.cssSelector("abc")));
 
         wait.until(webDriver -> webDriver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)));
         driver.findElement(By.cssSelector(CSS_SELECTOR_MUSIC_MORE)).click();
